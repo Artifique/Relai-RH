@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Relai-RH/static/css/main.dd9081c1.css",
-    "main.js": "/Relai-RH/static/js/main.5fa0f4b7.js",
+    "main.js": "/Relai-RH/static/js/main.91f201f0.js",
     "static/js/453.9a5c3f91.chunk.js": "/Relai-RH/static/js/453.9a5c3f91.chunk.js",
     "static/media/s3.jpg": "/Relai-RH/static/media/s3.5942ba5ee441b4c3817e.jpg",
     "static/media/s1.jpg": "/Relai-RH/static/media/s1.3e11257ecf4116b5bc40.jpg",
@@ -13,11 +13,11 @@
     "static/media/slick.woff": "/Relai-RH/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/Relai-RH/index.html",
     "main.dd9081c1.css.map": "/Relai-RH/static/css/main.dd9081c1.css.map",
-    "main.5fa0f4b7.js.map": "/Relai-RH/static/js/main.5fa0f4b7.js.map",
+    "main.91f201f0.js.map": "/Relai-RH/static/js/main.91f201f0.js.map",
     "453.9a5c3f91.chunk.js.map": "/Relai-RH/static/js/453.9a5c3f91.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.dd9081c1.css",
-    "static/js/main.5fa0f4b7.js"
+    "static/js/main.91f201f0.js"
   ]
 }
