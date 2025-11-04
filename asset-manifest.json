@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/Relai-RH/static/css/main.dd9081c1.css",
+    "main.js": "/Relai-RH/static/js/main.5fa0f4b7.js",
+    "static/js/453.9a5c3f91.chunk.js": "/Relai-RH/static/js/453.9a5c3f91.chunk.js",
+    "static/media/s3.jpg": "/Relai-RH/static/media/s3.5942ba5ee441b4c3817e.jpg",
+    "static/media/s1.jpg": "/Relai-RH/static/media/s1.3e11257ecf4116b5bc40.jpg",
+    "static/media/s4.jpg": "/Relai-RH/static/media/s4.5d4d06878553b6bc90bd.jpg",
+    "static/media/logo.jpg": "/Relai-RH/static/media/logo.da4c849b27a35aa54a98.jpg",
+    "static/media/slick.svg": "/Relai-RH/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/Relai-RH/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/Relai-RH/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/Relai-RH/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/Relai-RH/index.html",
+    "main.dd9081c1.css.map": "/Relai-RH/static/css/main.dd9081c1.css.map",
+    "main.5fa0f4b7.js.map": "/Relai-RH/static/js/main.5fa0f4b7.js.map",
+    "453.9a5c3f91.chunk.js.map": "/Relai-RH/static/js/453.9a5c3f91.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dd9081c1.css",
+    "static/js/main.5fa0f4b7.js"
+  ]
+}
