@@ -65,6 +65,9 @@ const NavBar: React.FC = () => {
         <ListItem component={Link} to="/universites" onClick={handleDrawerToggle}>
           <ListItemText primary="Universités" sx={{ color: muiTheme.palette.primary.main }} />
         </ListItem>
+        <ListItem component={Link} to="/adhesion" onClick={handleDrawerToggle}>
+          <ListItemText primary="Adhésion" sx={{ color: muiTheme.palette.primary.main }} />
+        </ListItem>
         {user ? (
           <>
             <ListItem component={Link} to="/profile" onClick={handleDrawerToggle}>
@@ -108,6 +111,7 @@ const NavBar: React.FC = () => {
               <NavButton component={Link} to="/activites">Activités</NavButton>
               <NavButton component={Link} to="/bourses">Bourses</NavButton>
               <NavButton component={Link} to="/universites">Universités</NavButton>
+              <NavButton component={Link} to="/adhesion">Adhésion</NavButton>
               {user ? (
                 <>
                   <NavButton component={Link} to="/profile">Profil</NavButton>

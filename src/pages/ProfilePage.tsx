@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Box, Button } from '@mui/material';
+import { Container, Typography, Box, Button, Paper, Grid, Avatar } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,27 +26,47 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Profil de {user.name}
-      </Typography>
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="h6">ID: {user.id}</Typography>
-        <Typography variant="h6">Nom: {user.name}</Typography>
-        <Typography variant="h6">Rôle: {user.role}</Typography>
-      </Box>
-      <Button variant="contained" color="primary" onClick={handleLogout}>
-        Déconnexion
-      </Button>
-      {/* Placeholder for profile management features */}
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" component="h2" gutterBottom>
-          Gérer votre profil
-        </Typography>
-        <Typography variant="body1">
-          Ici, vous pourrez modifier vos informations personnelles, changer votre mot de passe, etc.
-        </Typography>
-      </Box>
+    <Container sx={{ py: 8 }}>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 3, textAlign: 'center' }}>
+            <Avatar sx={{ width: 100, height: 100, margin: 'auto', mb: 2 }}>
+              {user.name.charAt(0)}
+            </Avatar>
+            <Typography variant="h5" component="h1" gutterBottom>
+              {user.name}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {user.email}
+            </Typography>
+            <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={() => navigate('/edit-profile')}>
+              Modifier le profil
+            </Button>
+            <Button variant="outlined" color="secondary" sx={{ mt: 1 }} onClick={handleLogout}>
+              Déconnexion
+            </Button>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+              Informations Personnelles
+            </Typography>
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="body1"><strong>Nom:</strong> {user.name}</Typography>
+              <Typography variant="body1"><strong>Email:</strong> {user.email}</Typography>
+              <Typography variant="body1"><strong>Téléphone:</strong> {user.phone || 'Non spécifié'}</Typography>
+              <Typography variant="body1"><strong>Adresse:</strong> {user.address || 'Non spécifiée'}</Typography>
+            </Box>
+            <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', mt: 4 }}>
+              Mes Candidatures
+            </Typography>
+            <Typography variant="body1">
+              Vous n'avez postulé à aucune offre pour le moment.
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
