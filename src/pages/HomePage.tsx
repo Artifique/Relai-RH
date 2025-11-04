@@ -56,7 +56,7 @@ const dummyJobs = [
   {
     id: 3,
     title: 'Data Analyst',
-    company: 'Banque de Développement du Mali (BDM)',
+    company: 'Ecobank Mali',
     location: 'Bamako, Mali',
     logoUrl: 'https://picsum.photos/seed/bdm/200',
     contractType: 'Stage',
@@ -72,7 +72,7 @@ const dummyJobs = [
   {
     id: 5,
     title: 'Développeur Backend',
-    company: 'Société Malienne de Transports (SMT)',
+    company: 'Société Malienne de Transports',
     location: 'Bamako, Mali',
     logoUrl: 'https://picsum.photos/seed/smt/200',
     contractType: 'CDI',
@@ -171,7 +171,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ overflowX: 'hidden' }}>
       <div className="geometric-shape shape6" />
       <div className="geometric-shape shape7" />
       <Slider {...sliderSettings}>
