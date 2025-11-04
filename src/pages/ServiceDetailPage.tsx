@@ -1,14 +1,20 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Typography, Box, Paper, Grid, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Container, Typography, Box, Paper, Grid, List, ListItem, ListItemIcon, ListItemText, Card, CardContent } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import s1Image from '../assets/s1.jpg'; // Using s1 as a default hero image
+
+interface SubService {
+  title: string;
+  description: string;
+}
 
 interface ServiceDetail {
   title: string;
   description: string;
   heroImage: string;
   keyPoints: string[];
+  subServices?: SubService[];
 }
 
 const servicesData: { [key: string]: ServiceDetail } = {
@@ -22,6 +28,10 @@ const servicesData: { [key: string]: ServiceDetail } = {
       "Adéquation formation-emploi.",
       "Insertion socioprofessionnelle durable.",
     ],
+    subServices: [
+      { title: "Baara ko keneya so", description: "Description de Baara ko keneya so." },
+      { title: "Baara gundo baro", description: "Description de Baara gundo baro." },
+    ],
   },
   "psp": {
     title: "Prévoyances Socioprofessionnelles (PSP)",
@@ -33,6 +43,10 @@ const servicesData: { [key: string]: ServiceDetail } = {
       "Sécurisation des parcours académiques et professionnels.",
       "Soutien à la transition vers la vie active.",
     ],
+    subServices: [
+      { title: "Couverture Emploi +", description: "Description de Couverture Emploi +." },
+      { title: "Bourses \'je crée mon Emploi\'", description: "Description de Bourses \'je crée mon Emploi\'." },
+    ],
   },
   "reseau-universitaire": {
     title: "Réseau Universitaire Relais RH",
@@ -43,6 +57,10 @@ const servicesData: { [key: string]: ServiceDetail } = {
       "Liaison entre étudiants, établissements et monde du travail.",
       "Accompagnement de proximité.",
       "Orientation vers l’employabilité et l’entrepreneuriat.",
+    ],
+    subServices: [
+      { title: "Réseau Accompagnement Pré-Emploi", description: "Description de Réseau Accompagnement Pré-Emploi." },
+      { title: "Certificat prêt à l'Emploi", description: "Description de Certificat prêt à l'Emploi." },
     ],
   },
 };
@@ -124,6 +142,30 @@ const ServiceDetailPage: React.FC = () => {
             </Paper>
           </Grid>
         </Grid>
+
+        {service.subServices && service.subServices.length > 0 && (
+          <Box sx={{ mt: 8 }}>
+            <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center', mb: 4 }}>
+              Nos Sous-Services
+            </Typography>
+            <Grid container spacing={4}>
+              {service.subServices.map((subService, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out', '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 } }}>
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 'bold' }}>
+                        {subService.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {subService.description}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
       </Container>
     </Box>
   );

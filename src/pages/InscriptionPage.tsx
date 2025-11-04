@@ -58,8 +58,7 @@ const InscriptionPage: React.FC = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleFinalSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleFinalSubmit = () => {
     // Combine all form data and send to backend
     const finalData = role === 'user' ? { name, email, password, role, adhesionFormData } : { name, email, password, role };
     console.log(finalData);
@@ -290,36 +289,40 @@ const InscriptionPage: React.FC = () => {
             Rejoignez notre communauté dès aujourd'hui.
           </Typography>
 
-          <Stepper activeStep={activeStep} orientation="vertical" sx={{ width: '100%' }}>
-            {steps.map((label, index) => (
+          <Stepper activeStep={activeStep} alternativeLabel sx={{ width: '100%', mb: 4 }}>
+            {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
-                <StepContent>
-                  {getStepContent(index)}
-                  <Box sx={{ mb: 2 }}>
-                    <div>
-                      <Button
-                        variant="contained"
-                        onClick={handleNext}
-                        sx={{ mt: 1, mr: 1 }}
-                      >
-                        {index === steps.length - 1 ? 'Terminer' : 'Suivant'}
-                      </Button>
-                      <Button
-                        disabled={index === 0}
-                        onClick={handleBack}
-                        sx={{ mt: 1, mr: 1 }}
-                      >
-                        Retour
-                      </Button>
-                    </div>
-                  </Box>
-                </StepContent>
               </Step>
             ))}
           </Stepper>
+
+          <Box sx={{ width: '100%' }}>
+            {getStepContent(activeStep)}
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Retour
+              </Button>
+              <Box sx={{ flex: '1 1 auto' }} />
+              {activeStep === steps.length - 1 ? (
+                <Button onClick={handleFinalSubmit} variant="contained">
+                  Soumettre l'inscription
+                </Button>
+              ) : (
+                <Button onClick={handleNext} variant="contained">
+                  Suivant
+                </Button>
+              )}
+            </Box>
+          </Box>
+
           {activeStep === steps.length && (
-            <Paper square elevation={0} sx={{ p: 3 }}>
+            <Paper square elevation={0} sx={{ p: 3, mt: 2 }}>
               <Typography>Toutes les étapes sont complétées - vous avez terminé !</Typography>
               <Button onClick={handleFinalSubmit} sx={{ mt: 1, mr: 1 }}>
                 Soumettre l'inscription
@@ -327,7 +330,7 @@ const InscriptionPage: React.FC = () => {
             </Paper>
           )}
 
-          <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
+          <Grid container justifyContent="flex-end" sx={{ mt: 2, mb: 4 }}>
             <Grid item>
               <MuiLink href="/connexion" variant="body2">
                 {"Déjà un compte ? Se connecter"}

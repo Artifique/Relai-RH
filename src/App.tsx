@@ -14,15 +14,19 @@ import InscriptionPage from './pages/InscriptionPage';
 import MotDePasseOubliePage from './pages/MotDePasseOubliePage';
 import PostulerPage from './pages/PostulerPage';
 import EditProfilePage from './pages/EditProfilePage';
-import AdhesionPage from './pages/AdhesionPage';
 import CreateActivityPage from './pages/CreateActivityPage';
 import theme from './theme';
 import { AuthProvider } from './context/AuthContext';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import MainLayout from './components/MainLayout'; // Import MainLayout
 import './App.css';
+import { useLocation } from 'react-router-dom'; // This import is no longer needed here
 
 function App() {
+  // const location = useLocation(); // This is no longer needed here
+  // const hideFooter = location.pathname === '/inscription'; // This is no longer needed here
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -33,13 +37,7 @@ function App() {
       <div className="geometric-shape shape5" />
       <Router>
         <AuthProvider>
-          <NavBar />
-          <Box
-            sx={{
-              minHeight: 'calc(100vh - 64px - 100px)', // Adjust height based on AppBar and Footer height
-              // Removed background gradient
-            }}
-          >
+          <MainLayout>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/activites" element={<ActivitesPage />} />
@@ -50,13 +48,11 @@ function App() {
               <Route path="/mot-de-passe-oublie" element={<MotDePasseOubliePage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/edit-profile" element={<EditProfilePage />} />
-              <Route path="/adhesion" element={<AdhesionPage />} />
               <Route path="/create-activity" element={<CreateActivityPage />} />
               <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
               <Route path="/emploi/:jobId" element={<PostulerPage />} />
             </Routes>
-          </Box>
-          <Footer />
+          </MainLayout>
         </AuthProvider>
       </Router>
     </ThemeProvider>
