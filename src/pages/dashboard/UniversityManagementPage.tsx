@@ -68,26 +68,47 @@ const UniversityManagementPage: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>Gestion des Universités</Typography>
+      <Box sx={{ mb: 4, p: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', textAlign: 'center', bgcolor: 'background.paper' }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+          Gestion des Universités
+        </Typography>
+      </Box>
       <Card sx={{ borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <TextField variant="outlined" size="small" placeholder="Rechercher..." InputProps={{ startAdornment: <InputAdornment position="start"><Search /></InputAdornment> }} />
-            <Button variant="contained" color="primary" onClick={handleAddClick}>Ajouter une université</Button>
-          </Box>
-          <TableContainer component={Paper} sx={{boxShadow: 'none'}}>
+          <Grid container spacing={2} alignItems="center" sx={{ mb: 3 }}>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField 
+                fullWidth
+                variant="outlined" 
+                size="small" 
+                placeholder="Rechercher..." 
+                InputProps={{ startAdornment: <InputAdornment position="start"><Search /></InputAdornment> }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={8} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
+              <Button variant="contained" color="primary" onClick={handleAddClick}>Ajouter une université</Button>
+            </Grid>
+          </Grid>
+          <TableContainer component={Paper} sx={{ boxShadow: 'none', overflowX: 'auto' }}>
             <Table sx={{ minWidth: 650 }}>
-              <TableHead><TableRow><TableCell>Nom</TableCell><TableCell>Email</TableCell><TableCell>Représentant</TableCell><TableCell align="right">Actions</TableCell></TableRow></TableHead>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Nom</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Email</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Représentant</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
               <TableBody>
                 {universities.map((uni) => (
-                  <TableRow key={uni.id}>
+                  <TableRow key={uni.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell>{uni.nom}</TableCell>
                     <TableCell>{uni.email}</TableCell>
                     <TableCell>{uni.representant}</TableCell>
                     <TableCell align="right">
-                      <Tooltip title="Voir"><IconButton size="small" onClick={() => handleViewClick(uni)}><Visibility /></IconButton></Tooltip>
-                      <Tooltip title="Modifier"><IconButton size="small" onClick={() => handleEditClick(uni)}><Edit /></IconButton></Tooltip>
-                      <Tooltip title="Supprimer"><IconButton size="small" onClick={() => handleDeleteClick(uni)}><Delete /></IconButton></Tooltip>
+                      <Tooltip title="Voir"><IconButton size="small" onClick={() => handleViewClick(uni)} color="info"><Visibility fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Modifier"><IconButton size="small" onClick={() => handleEditClick(uni)} color="primary"><Edit fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Supprimer"><IconButton size="small" onClick={() => handleDeleteClick(uni)} color="error"><Delete fontSize="small" /></IconButton></Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -100,12 +121,12 @@ const UniversityManagementPage: React.FC = () => {
       {/* MODALE AJOUT/MODIFICATION */}
       <Dialog open={formOpen} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>{selectedUniversity ? 'Modifier l\'université' : 'Ajouter une université'}</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{mt: 1}}>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.nom} autoFocus required margin="dense" id="nom" label="Nom de l'université" type="text" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.email} required margin="dense" id="email" label="Email de contact" type="email" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.adresse} margin="dense" id="adresse" label="Adresse" type="text" fullWidth multiline rows={3} variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.representant} margin="dense" id="representant" label="Nom du Représentant" type="text" fullWidth variant="outlined" /></Grid>
+        <DialogContent dividers sx={{ pt: 2 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.nom} autoFocus required margin="normal" id="nom" label="Nom de l'université" type="text" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.email} required margin="normal" id="email" label="Email de contact" type="email" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.adresse} margin="normal" id="adresse" label="Adresse" type="text" fullWidth multiline rows={3} variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.representant} margin="normal" id="representant" label="Nom du Représentant" type="text" fullWidth variant="outlined" /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions><Button onClick={handleClose}>Annuler</Button><Button onClick={handleClose} variant="contained">{selectedUniversity ? 'Enregistrer' : 'Ajouter'}</Button></DialogActions>
@@ -114,8 +135,8 @@ const UniversityManagementPage: React.FC = () => {
       {/* MODALE VOIR DÉTAILS */}
       <Dialog open={viewOpen} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>Détails de l'université</DialogTitle>
-        <DialogContent>
-            {selectedUniversity && (
+        <DialogContent dividers sx={{ pt: 2 }}>
+            {selectedUniversity ? (
                 <List>
                     <ListItem><ListItemText primary="ID" secondary={selectedUniversity.id} /></ListItem>
                     <ListItem><ListItemText primary="Nom" secondary={selectedUniversity.nom} /></ListItem>
@@ -123,6 +144,8 @@ const UniversityManagementPage: React.FC = () => {
                     <ListItem><ListItemText primary="Adresse" secondary={selectedUniversity.adresse || 'N/A'} /></ListItem>
                     <ListItem><ListItemText primary="Représentant" secondary={selectedUniversity.representant} /></ListItem>
                 </List>
+            ) : (
+                <Typography>Aucune université sélectionnée.</Typography>
             )}
         </DialogContent>
         <DialogActions><Button onClick={handleClose} variant="contained">Fermer</Button></DialogActions>
@@ -131,7 +154,7 @@ const UniversityManagementPage: React.FC = () => {
       {/* MODALE CONFIRMATION SUPPRESSION */}
       <Dialog open={deleteOpen} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>Confirmer la suppression</DialogTitle>
-        <DialogContent><Typography>Êtes-vous sûr de vouloir supprimer l'université "{selectedUniversity?.nom}" ? Cette action est irréversible.</Typography></DialogContent>
+        <DialogContent dividers sx={{ pt: 2 }}><Typography>Êtes-vous sûr de vouloir supprimer l'université "{selectedUniversity?.nom}" ? Cette action est irréversible.</Typography></DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Annuler</Button>
           <Button onClick={handleDeleteConfirm} variant="contained" color="error">Supprimer</Button>

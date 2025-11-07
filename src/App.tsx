@@ -2,7 +2,6 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Box } from '@mui/material';
 import HomePage from './pages/HomePage';
 import ActivitesPage from './pages/ActivitesPage';
 import BoursesPage from './pages/BoursesPage';
@@ -24,13 +23,11 @@ import BourseManagementPage from './pages/dashboard/BourseManagementPage';
 
 import theme from './theme';
 import { AuthProvider } from './context/AuthContext';
-import NavBar from './components/NavBar';
-import Footer from './components/Footer';
 import MainLayout from './components/MainLayout'; // Import MainLayout
 import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 import { UserRole } from './models/user'; // Import UserRole
 import './App.css';
-import { useLocation } from 'react-router-dom'; // This import is no longer needed here
+// import { useLocation } from 'react-router-dom'; // This import is no longer needed here
 
 function App() {
   // const location = useLocation(); // This is no longer needed here

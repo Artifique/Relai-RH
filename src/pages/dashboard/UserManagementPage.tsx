@@ -58,27 +58,49 @@ const UserManagementPage: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>Gestion des Utilisateurs</Typography>
+      <Box sx={{ mb: 4, p: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', textAlign: 'center', bgcolor: 'background.paper' }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+          Gestion des Utilisateurs
+        </Typography>
+      </Box>
       <Card sx={{ borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <TextField variant="outlined" size="small" placeholder="Rechercher..." InputProps={{ startAdornment: <InputAdornment position="start"><Search /></InputAdornment> }} />
-            <Button variant="contained" color="primary" onClick={handleAddClick}>Ajouter un utilisateur</Button>
-          </Box>
-          <TableContainer component={Paper} sx={{boxShadow: 'none'}}>
+          <Grid container spacing={2} alignItems="center" sx={{ mb: 3 }}>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField 
+                fullWidth
+                variant="outlined" 
+                size="small" 
+                placeholder="Rechercher..." 
+                InputProps={{ startAdornment: <InputAdornment position="start"><Search /></InputAdornment> }} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={8} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
+              <Button variant="contained" color="primary" onClick={handleAddClick}>Ajouter un utilisateur</Button>
+            </Grid>
+          </Grid>
+          <TableContainer component={Paper} sx={{ boxShadow: 'none', overflowX: 'auto' }}>
             <Table sx={{ minWidth: 650 }}>
-              <TableHead><TableRow><TableCell>Nom</TableCell><TableCell>Email</TableCell><TableCell>Rôle</TableCell><TableCell>Statut</TableCell><TableCell align="right">Actions</TableCell></TableRow></TableHead>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Nom</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Email</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Rôle</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Statut</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
               <TableBody>
                 {users.map((user) => (
-                  <TableRow key={user.id}>
+                  <TableRow key={user.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell>{user.nom}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell><Chip label={user.role} color={roleColors[user.role] || 'default'} size="small" /></TableCell>
                     <TableCell><Chip label={user.status} color={user.status === 'Actif' ? 'success' : 'default'} size="small" variant="outlined" /></TableCell>
                     <TableCell align="right">
-                      <Tooltip title="Voir"><IconButton size="small" onClick={() => handleViewClick(user)}><Visibility /></IconButton></Tooltip>
-                      <Tooltip title="Modifier"><IconButton size="small" onClick={() => handleEditClick(user)}><Edit /></IconButton></Tooltip>
-                      <Tooltip title="Supprimer"><IconButton size="small" onClick={() => handleDeleteClick(user)}><Delete /></IconButton></Tooltip>
+                      <Tooltip title="Voir"><IconButton size="small" onClick={() => handleViewClick(user)} color="info"><Visibility fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Modifier"><IconButton size="small" onClick={() => handleEditClick(user)} color="primary"><Edit fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Supprimer"><IconButton size="small" onClick={() => handleDeleteClick(user)} color="error"><Delete fontSize="small" /></IconButton></Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -91,13 +113,13 @@ const UserManagementPage: React.FC = () => {
       {/* MODALE AJOUT/MODIFICATION */}
       <Dialog open={formOpen} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>{selectedUser ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur'}</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{mt: 1}}>
-            <Grid item xs={12}><TextField defaultValue={selectedUser?.nom} autoFocus required margin="dense" id="nom" label="Nom complet" type="text" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUser?.email} required margin="dense" id="email" label="Email" type="email" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField margin="dense" id="password" label={selectedUser ? "Nouveau mot de passe (optionnel)" : "Mot de passe"} type="password" fullWidth variant="outlined" required={!selectedUser} /></Grid>
+        <DialogContent dividers sx={{ pt: 2 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}><TextField defaultValue={selectedUser?.nom} autoFocus required margin="normal" id="nom" label="Nom complet" type="text" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField defaultValue={selectedUser?.email} required margin="normal" id="email" label="Email" type="email" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField margin="normal" id="password" label={selectedUser ? "Nouveau mot de passe (optionnel)" : "Mot de passe"} type="password" fullWidth variant="outlined" required={!selectedUser} /></Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth required margin="dense">
+              <FormControl fullWidth required margin="normal">
                 <InputLabel id="role-select-label">Rôle</InputLabel>
                 <Select labelId="role-select-label" id="role" label="Rôle" defaultValue={selectedUser?.role || 'ETUDIANT'}>
                   {userRoles.map(role => <MenuItem key={role} value={role}>{role}</MenuItem>)}
@@ -112,7 +134,7 @@ const UserManagementPage: React.FC = () => {
       {/* MODALE VOIR DÉTAILS */}
       <Dialog open={viewOpen} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>Détails de l'utilisateur</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers sx={{ pt: 2 }}>
             {selectedUser && (
                 <List>
                     <ListItem><ListItemText primary="ID" secondary={selectedUser.id} /></ListItem>
@@ -129,7 +151,7 @@ const UserManagementPage: React.FC = () => {
       {/* MODALE CONFIRMATION SUPPRESSION */}
       <Dialog open={deleteOpen} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>Confirmer la suppression</DialogTitle>
-        <DialogContent><Typography>Êtes-vous sûr de vouloir supprimer l'utilisateur "{selectedUser?.nom}" ?</Typography></DialogContent>
+        <DialogContent dividers sx={{ pt: 2 }}><Typography>Êtes-vous sûr de vouloir supprimer l'utilisateur "{selectedUser?.nom}" ?</Typography></DialogContent>
         <DialogActions><Button onClick={handleClose}>Annuler</Button><Button onClick={handleDeleteConfirm} variant="contained" color="error">Supprimer</Button></DialogActions>
       </Dialog>
     </Box>

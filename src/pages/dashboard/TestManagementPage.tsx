@@ -51,25 +51,38 @@ const TestManagementPage: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>Gestion des Tests d'Employabilité</Typography>
+      <Box sx={{ mb: 4, p: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', textAlign: 'center', bgcolor: 'background.paper' }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+          Gestion des Tests d'Employabilité
+        </Typography>
+      </Box>
       <Card sx={{ borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-            <Button variant="contained" color="primary" startIcon={<Add />} onClick={handleAddClick}>Créer un nouveau test</Button>
-          </Box>
-          <TableContainer component={Paper} sx={{boxShadow: 'none'}}>
+          <Grid container justifyContent="flex-end" sx={{ mb: 3 }}>
+            <Grid item>
+              <Button variant="contained" color="primary" startIcon={<Add />} onClick={handleAddClick}>Créer un nouveau test</Button>
+            </Grid>
+          </Grid>
+          <TableContainer component={Paper} sx={{ boxShadow: 'none', overflowX: 'auto' }}>
             <Table sx={{ minWidth: 650 }}>
-              <TableHead><TableRow><TableCell>Titre</TableCell><TableCell align="center">Durée (min)</TableCell><TableCell align="center">Questions</TableCell><TableCell align="right">Actions</TableCell></TableRow></TableHead>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Titre</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Durée (min)</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Questions</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
               <TableBody>
                 {tests.map((test) => (
-                  <TableRow key={test.id}>
+                  <TableRow key={test.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell>{test.titre}</TableCell>
                     <TableCell align="center">{test.duree}</TableCell>
                     <TableCell align="center">{test.questions}</TableCell>
                     <TableCell align="right">
-                      <Tooltip title="Voir"><IconButton size="small" onClick={() => handleViewClick(test)}><Visibility /></IconButton></Tooltip>
-                      <Tooltip title="Modifier"><IconButton size="small" onClick={() => handleEditClick(test)}><Edit /></IconButton></Tooltip>
-                      <Tooltip title="Supprimer"><IconButton size="small" onClick={() => handleDeleteClick(test)}><Delete /></IconButton></Tooltip>
+                      <Tooltip title="Voir"><IconButton size="small" onClick={() => handleViewClick(test)} color="info"><Visibility fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Modifier"><IconButton size="small" onClick={() => handleEditClick(test)} color="primary"><Edit fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Supprimer"><IconButton size="small" onClick={() => handleDeleteClick(test)} color="error"><Delete fontSize="small" /></IconButton></Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -82,12 +95,12 @@ const TestManagementPage: React.FC = () => {
       {/* MODALE AJOUT/MODIFICATION */}
       <Dialog open={formOpen} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>{selectedTest ? 'Modifier le test' : 'Créer un nouveau test'}</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{mt: 1}}>
-            <Grid item xs={12}><TextField defaultValue={selectedTest?.titre} autoFocus required margin="dense" id="titre" label="Titre du test" type="text" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedTest?.description} margin="dense" id="description" label="Description" type="text" fullWidth multiline rows={4} variant="outlined" /></Grid>
-            <Grid item xs={6}><TextField defaultValue={selectedTest?.duree} margin="dense" id="duree" label="Durée (minutes)" type="number" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={6}><TextField defaultValue={selectedTest?.questions} margin="dense" id="questions" label="Nombre de questions" type="number" fullWidth variant="outlined" /></Grid>
+        <DialogContent dividers sx={{ pt: 2 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}><TextField defaultValue={selectedTest?.titre} autoFocus required margin="normal" id="titre" label="Titre du test" type="text" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField defaultValue={selectedTest?.description} margin="normal" id="description" label="Description" type="text" fullWidth multiline rows={4} variant="outlined" /></Grid>
+            <Grid item xs={6}><TextField defaultValue={selectedTest?.duree} margin="normal" id="duree" label="Durée (minutes)" type="number" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={6}><TextField defaultValue={selectedTest?.questions} margin="normal" id="questions" label="Nombre de questions" type="number" fullWidth variant="outlined" /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions><Button onClick={handleClose}>Annuler</Button><Button onClick={handleClose} variant="contained">{selectedTest ? 'Enregistrer' : 'Créer'}</Button></DialogActions>
@@ -96,8 +109,7 @@ const TestManagementPage: React.FC = () => {
       {/* MODALE VOIR DÉTAILS */}
       <Dialog open={viewOpen} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>Détails du test</DialogTitle>
-        <DialogContent>
-            {selectedTest && (
+        <DialogContent dividers sx={{ pt: 2 }}>            {selectedTest && (
                 <List>
                     <ListItem><ListItemText primary="ID" secondary={selectedTest.id} /></ListItem>
                     <ListItem><ListItemText primary="Titre" secondary={selectedTest.titre} /></ListItem>
@@ -113,7 +125,7 @@ const TestManagementPage: React.FC = () => {
       {/* MODALE CONFIRMATION SUPPRESSION */}
       <Dialog open={deleteOpen} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>Confirmer la suppression</DialogTitle>
-        <DialogContent><Typography>Êtes-vous sûr de vouloir supprimer le test "{selectedTest?.titre}" ?</Typography></DialogContent>
+        <DialogContent dividers sx={{ pt: 2 }}><Typography>Êtes-vous sûr de vouloir supprimer le test "{selectedTest?.titre}" ?</Typography></DialogContent>
         <DialogActions><Button onClick={handleClose}>Annuler</Button><Button onClick={handleDeleteConfirm} variant="contained" color="error">Supprimer</Button></DialogActions>
       </Dialog>
     </Box>
