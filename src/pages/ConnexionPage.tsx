@@ -1,68 +1,56 @@
 import React, { useState } from 'react';
-import { Typography, TextField, Button, Box, Grid, Paper, Link as MuiLink } from '@mui/material';
+import { Container, Box, Typography, TextField, Button, Link as MuiLink, Card, CardContent, Alert } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import s4Image from '../assets/s4.jpg';
+import { UserRole } from '../models/user';
 
 const ConnexionPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // Simulate a login process - accept any credentials for now
-    login('1', 'Guest User', 'guest@example.com', 'user'); // Dummy user data
-    navigate('/'); // Redirect to home page
+    setError(null); // Clear previous errors
+
+    try {
+      await login({ email, password });
+      // If login is successful, useAuth context will be updated
+      // and the user object will contain the role.
+      // We need to get the user from the context after successful login.
+      const authState = JSON.parse(localStorage.getItem('user') || '{}'); // Directly read from localStorage for immediate check
+      if (authState && authState.role === UserRole.ADMINISTRATEUR) {
+        navigate('/dashboard');
+      } else {
+        navigate('/profile'); // Redirect non-admin users to their profile or homepage
+      }
+    } catch (err: any) {
+      setError(err.message || 'Échec de la connexion. Veuillez vérifier vos identifiants.');
+    }
   };
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      <Grid
-        item
-        xs={12}
-        sm={6}
-        md={6}
-        component={Paper}
-        elevation={6}
-        square
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          p: { xs: 2, sm: 3, md: 4 },
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            maxWidth: 400,
-            width: '100%',
-          }}
-        >
-          <Typography component="h1" variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
-            Bienvenue !
+    <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '80vh' }}>
+      <Card sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
+        <CardContent sx={{ width: '100%' }}>
+          <Typography component="h1" variant="h5" sx={{ mb: 3, fontWeight: 'bold', textAlign: 'center' }}>
+            Connexion
           </Typography>
-          <Typography component="p" variant="body1" sx={{ mb: 4, color: 'text.secondary' }}>
-            Connectez-vous pour accéder à votre espace.
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ width: '100%' }}>
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
-              label="Adresse e-mail"
+              label="Adresse Email"
               name="email"
               autoComplete="email"
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              variant="outlined"
             />
             <TextField
               margin="normal"
@@ -75,44 +63,27 @@ const ConnexionPage: React.FC = () => {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              variant="outlined"
             />
-            <MuiLink href="/mot-de-passe-oublie" variant="body2" sx={{ display: 'block', textAlign: 'right', my: 1 }}>
-              Mot de passe oublié ?
-            </MuiLink>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 2, mb: 2, py: 1.5, borderRadius: 2, fontWeight: 'bold' }}
+              sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: '8px' }}
             >
               Se connecter
             </Button>
-            <Grid container>
-              <Grid item>
-                <MuiLink href="/inscription" variant="body2">
-                  {"Vous n'avez pas de compte ? S'inscrire"}
-                </MuiLink>
-              </Grid>
-            </Grid>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+              <MuiLink component={RouterLink} to="/mot-de-passe-oublie" variant="body2">
+                Mot de passe oublié ?
+              </MuiLink>
+              <MuiLink component={RouterLink} to="/inscription" variant="body2">
+                {"Pas encore de compte ? S'inscrire"}
+              </MuiLink>
+            </Box>
           </Box>
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={false}
-        sm={6}
-        md={6}
-        sx={{
-          backgroundImage: `url(${s4Image})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: (t) =>
-            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-    </Grid>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
 

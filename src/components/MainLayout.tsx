@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Outlet } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 
-const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const MainLayout: React.FC = () => {
   const location = useLocation();
   const hideFooter = location.pathname === '/inscription';
 
@@ -17,7 +17,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           flexGrow: 1,
         }}
       >
-        {children}
+        <Outlet />
       </Box>
       {!hideFooter && <Footer />}
     </Box>

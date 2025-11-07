@@ -15,11 +15,20 @@ import MotDePasseOubliePage from './pages/MotDePasseOubliePage';
 import PostulerPage from './pages/PostulerPage';
 import EditProfilePage from './pages/EditProfilePage';
 import CreateActivityPage from './pages/CreateActivityPage';
+import DashboardLayout from './pages/dashboard/DashboardLayout';
+import DashboardHomePage from './pages/dashboard/DashboardHomePage';
+import UserManagementPage from './pages/dashboard/UserManagementPage';
+import UniversityManagementPage from './pages/dashboard/UniversityManagementPage';
+import TestManagementPage from './pages/dashboard/TestManagementPage';
+import BourseManagementPage from './pages/dashboard/BourseManagementPage';
+
 import theme from './theme';
 import { AuthProvider } from './context/AuthContext';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import MainLayout from './components/MainLayout'; // Import MainLayout
+import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
+import { UserRole } from './models/user'; // Import UserRole
 import './App.css';
 import { useLocation } from 'react-router-dom'; // This import is no longer needed here
 
@@ -35,24 +44,37 @@ function App() {
       <div className="geometric-shape shape3" />
       <div className="geometric-shape shape4" />
       <div className="geometric-shape shape5" />
-      <Router>
+      <Router basename="/Relai-RH">
         <AuthProvider>
-          <MainLayout>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/activites" element={<ActivitesPage />} />
-              <Route path="/bourses" element={<BoursesPage />} />
-              <Route path="/universites" element={<UniversitesPage />} />
-              <Route path="/connexion" element={<ConnexionPage />} />
-              <Route path="/inscription" element={<InscriptionPage />} />
-              <Route path="/mot-de-passe-oublie" element={<MotDePasseOubliePage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/edit-profile" element={<EditProfilePage />} />
-              <Route path="/create-activity" element={<CreateActivityPage />} />
-              <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
-              <Route path="/emploi/:jobId" element={<PostulerPage />} />
+          <Routes>
+              {/* Routes publiques avec le MainLayout */}
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/activites" element={<ActivitesPage />} />
+                <Route path="/bourses" element={<BoursesPage />} />
+                <Route path="/universites" element={<UniversitesPage />} />
+                <Route path="/connexion" element={<ConnexionPage />} />
+                <Route path="/inscription" element={<InscriptionPage />} />
+                <Route path="/mot-de-passe-oublie" element={<MotDePasseOubliePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/edit-profile" element={<EditProfilePage />} />
+                <Route path="/create-activity" element={<CreateActivityPage />} />
+                <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
+                <Route path="/emploi/:jobId" element={<PostulerPage />} />
+              </Route>
+
+              {/* Routes du tableau de bord avec le DashboardLayout et ProtectedRoute */}
+              <Route element={<ProtectedRoute allowedRoles={[UserRole.ADMINISTRATEUR]} />}>
+                <Route path="/dashboard" element={<DashboardLayout />}>
+                  <Route index element={<DashboardHomePage />} />
+                  <Route path="users" element={<UserManagementPage />} />
+                  <Route path="universities" element={<UniversityManagementPage />} />
+                  <Route path="tests" element={<TestManagementPage />} />
+                  <Route path="bourses" element={<BourseManagementPage />} />
+                  {/* Ajoutez ici d'autres routes de dashboard au besoin */}
+                </Route>
+              </Route>
             </Routes>
-          </MainLayout>
         </AuthProvider>
       </Router>
     </ThemeProvider>

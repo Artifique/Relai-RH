@@ -1,72 +1,125 @@
-import React from 'react';
-import { Container, Typography, Box, Button, Paper, Grid, Avatar } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Container, Box, Typography, Button, Paper, Avatar, Grid, CircularProgress, Alert, Divider, Link as MuiLink } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { userService } from '../services/userService'; // Import userService
+import { UserProfile } from '../models/user'; // Import UserProfile
 
 const ProfilePage: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+  useEffect(() => {
+    if (user && token) {
+      const fetchProfile = async () => {
+        try {
+          setLoading(true);
+          const profile = await userService.getUserProfile(user.id, token);
+          setUserProfile(profile);
+        } catch (err: any) {
+          setError(err.message || 'Erreur lors du chargement du profil.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProfile();
+    } else if (!user) {
+      navigate('/connexion'); // Redirect if not logged in
+    }
+  }, [user, token, navigate]);
 
-  if (!user) {
+  if (loading) {
     return (
-      <Container sx={{ mt: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Accès refusé
-        </Typography>
-        <Typography variant="body1">
-          Veuillez vous connecter pour accéder à cette page.
-        </Typography>
+      <Container component="main" maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container component="main" maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+
+      </Container>
+    );
+  }
+
+  if (!userProfile) {
+    return (
+      <Container component="main" maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+        <Alert severity="info">Aucune donnée de profil trouvée.</Alert>
       </Container>
     );
   }
 
   return (
-    <Container sx={{ py: 8 }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 3, textAlign: 'center' }}>
-            <Avatar sx={{ width: 100, height: 100, margin: 'auto', mb: 2 }}>
-              {user.name.charAt(0)}
-            </Avatar>
-            <Typography variant="h5" component="h1" gutterBottom>
-              {user.name}
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              {user.email}
-            </Typography>
-            <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={() => navigate('/edit-profile')}>
-              Modifier le profil
-            </Button>
-            <Button variant="outlined" color="secondary" sx={{ mt: 1 }} onClick={handleLogout}>
-              Déconnexion
-            </Button>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3 }}>
+    <Container component="main" maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: '16px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
+          <Avatar sx={{ width: 100, height: 100, mb: 2, bgcolor: 'primary.main' }}>
+            {userProfile.prenom.charAt(0)}{userProfile.nom.charAt(0)}
+          </Avatar>
+          <Typography variant="h5" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+            {userProfile.prenom} {userProfile.nom}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            {user?.email} ({user?.role})
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/edit-profile"
+            sx={{ mt: 2 }}
+          >
+            Modifier le profil
+          </Button>
+        </Box>
+
+        <Divider sx={{ my: 3 }} />
+
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
             <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
               Informations Personnelles
             </Typography>
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="body1"><strong>Nom:</strong> {user.name}</Typography>
-              <Typography variant="body1"><strong>Email:</strong> {user.email}</Typography>
-              <Typography variant="body1"><strong>Téléphone:</strong> {user.phone || 'Non spécifié'}</Typography>
-              <Typography variant="body1"><strong>Adresse:</strong> {user.address || 'Non spécifiée'}</Typography>
-            </Box>
-            <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', mt: 4 }}>
-              Mes Candidatures
+            <Typography variant="body1"><strong>Sexe:</strong> {userProfile.sexe || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Date de Naissance:</strong> {userProfile.date_naissance ? new Date(userProfile.date_naissance).toLocaleDateString() : 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Lieu de Naissance:</strong> {userProfile.lieu_naissance || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Téléphone:</strong> {userProfile.telephone || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Adresse:</strong> {userProfile.adresse_actuelle || 'Non spécifiée'}</Typography>
+            <Typography variant="body1"><strong>Région/Commune:</strong> {userProfile.region_commune || 'Non spécifiée'}</Typography>
+            <Typography variant="body1"><strong>URL CV:</strong> {userProfile.cv_url ? <MuiLink href={userProfile.cv_url} target="_blank">Voir le CV</MuiLink> : 'Non spécifié'}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+              Informations Professionnelles
             </Typography>
-            <Typography variant="body1">
-              Vous n'avez postulé à aucune offre pour le moment.
+            <Typography variant="body1"><strong>Statut Actuel:</strong> {userProfile.statut_actuel || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Université/Institut:</strong> {userProfile.universite_institut || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Faculté/Département:</strong> {userProfile.faculte_departement || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Niveau d'Études:</strong> {userProfile.niveau_etudes || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Domaine de Formation:</strong> {userProfile.domaine_formation || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Année Diplôme:</strong> {userProfile.annee_obtention_diplome || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Secteur Visé:</strong> {userProfile.secteur_professionnel_vise || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Type Emploi Recherché:</strong> {userProfile.type_emploi_recherche || 'Non spécifié'}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', mt: 2 }}>
+              Attentes
             </Typography>
-          </Paper>
+            <Typography variant="body1"><strong>Orientation:</strong> {userProfile.attentes_orientation ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Formation:</strong> {userProfile.attentes_formation ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Accompagnement Recherche:</strong> {userProfile.attentes_accompagnement_recherche ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Mise en Relation:</strong> {userProfile.attentes_mise_en_relation ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Stage:</strong> {userProfile.attentes_stage ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Entrepreneuriat:</strong> {userProfile.attentes_entrepreneuriat ? 'Oui' : 'Non'}</Typography>
+          </Grid>
         </Grid>
-      </Grid>
+      </Paper>
     </Container>
   );
 };

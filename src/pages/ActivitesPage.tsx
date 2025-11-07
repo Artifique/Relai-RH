@@ -1,9 +1,10 @@
-import { Container, Typography, Grid, Card, CardContent, CardActions, Button, TextField, InputAdornment, IconButton, Box, CardMedia } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
+import { UserRole } from '../models/user'; // Import UserRole
+import { Link } from 'react-router-dom';
+import { Box, Typography, Container, TextField, InputAdornment, IconButton, Button, Grid, Card, CardMedia, CardContent, CardActions } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import s3Image from '../assets/s3.jpg';
-import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import s1Image from '../assets/s1.jpg';
 
 interface Activity {
   id: number;
@@ -75,7 +76,7 @@ const ActivitesPage: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage: `url(${s3Image})`,
+            backgroundImage: `url(${s1Image})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'brightness(40%)',
@@ -104,7 +105,7 @@ const ActivitesPage: React.FC = () => {
               ),
             }}
           />
-          {user && user.role === 'university' && (
+          {user && user.role === UserRole.REPRESENTANT_UNIVERSITE && (
             <Button component={Link} to="/create-activity" variant="contained" color="primary" startIcon={<AddIcon />}>
               Créer une activité
             </Button>
