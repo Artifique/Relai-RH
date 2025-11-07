@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     Box, Typography, Card, CardContent, TextField, InputAdornment, 
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
@@ -7,29 +7,27 @@ import {
     DialogActions, Grid, List, ListItem, ListItemText
 } from '@mui/material';
 import { Search, Edit, Delete, Visibility } from '@mui/icons-material';
-
-// Définir un type pour les objets université pour plus de sécurité
-type University = {
-  id: number;
-  nom: string;
-  email: string;
-  representant: string;
-  adresse?: string;
-};
-
-// Données factices
-const initialUniversities: University[] = [
-  { id: 1, nom: 'Université des Sciences Sociales et de Gestion de Bamako', email: 'contact@ussgb.ml', representant: 'Fanta Diarra', adresse: 'Bamako, Mali' },
-  { id: 2, nom: 'Université des Sciences, des Techniques et des Technologies de Bamako', email: 'contact@usttb.ml', representant: 'Moussa Coulibaly', adresse: 'Bamako, Mali' },
-  { id: 3, nom: 'Université des Lettres et des Sciences Humaines de Bamako', email: 'contact@ulshb.ml', representant: 'Awa Keita', adresse: 'Bamako, Mali' },
-];
+import { universityService } from '../../services/universityService';
+import { University } from '../../models/university';
 
 const UniversityManagementPage: React.FC = () => {
-  const [universities, setUniversities] = useState(initialUniversities);
+  const [universities, setUniversities] = useState<University[]>([]);
   const [formOpen, setFormOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        const data = await universityService.getAllUniversities();
+        setUniversities(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des universités:", error);
+      }
+    };
+    fetchUniversities();
+  }, []);
 
   // GESTION DES MODALES
   const handleAddClick = () => {
@@ -94,8 +92,8 @@ const UniversityManagementPage: React.FC = () => {
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Nom</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Email</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Représentant</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Email de Contact</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Représentant (Email)</TableCell>
                   <TableCell align="right" sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -103,8 +101,8 @@ const UniversityManagementPage: React.FC = () => {
                 {universities.map((uni) => (
                   <TableRow key={uni.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell>{uni.nom}</TableCell>
-                    <TableCell>{uni.email}</TableCell>
-                    <TableCell>{uni.representant}</TableCell>
+                    <TableCell>{uni.emailContact}</TableCell>
+                    <TableCell>{uni.representant?.email || 'N/A'}</TableCell>
                     <TableCell align="right">
                       <Tooltip title="Voir"><IconButton size="small" onClick={() => handleViewClick(uni)} color="info"><Visibility fontSize="small" /></IconButton></Tooltip>
                       <Tooltip title="Modifier"><IconButton size="small" onClick={() => handleEditClick(uni)} color="primary"><Edit fontSize="small" /></IconButton></Tooltip>
@@ -124,9 +122,9 @@ const UniversityManagementPage: React.FC = () => {
         <DialogContent dividers sx={{ pt: 2 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}><TextField defaultValue={selectedUniversity?.nom} autoFocus required margin="normal" id="nom" label="Nom de l'université" type="text" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.email} required margin="normal" id="email" label="Email de contact" type="email" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.emailContact} required margin="normal" id="emailContact" label="Email de contact" type="email" fullWidth variant="outlined" /></Grid>
             <Grid item xs={12}><TextField defaultValue={selectedUniversity?.adresse} margin="normal" id="adresse" label="Adresse" type="text" fullWidth multiline rows={3} variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.representant} margin="normal" id="representant" label="Nom du Représentant" type="text" fullWidth variant="outlined" /></Grid>
+            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.representant?.email} margin="normal" id="representantEmail" label="Email du Représentant" type="text" fullWidth variant="outlined" /></Grid>
           </Grid>
         </DialogContent>
         <DialogActions><Button onClick={handleClose}>Annuler</Button><Button onClick={handleClose} variant="contained">{selectedUniversity ? 'Enregistrer' : 'Ajouter'}</Button></DialogActions>
@@ -140,9 +138,10 @@ const UniversityManagementPage: React.FC = () => {
                 <List>
                     <ListItem><ListItemText primary="ID" secondary={selectedUniversity.id} /></ListItem>
                     <ListItem><ListItemText primary="Nom" secondary={selectedUniversity.nom} /></ListItem>
-                    <ListItem><ListItemText primary="Email" secondary={selectedUniversity.email} /></ListItem>
+                    <ListItem><ListItemText primary="Email de Contact" secondary={selectedUniversity.emailContact} /></ListItem>
                     <ListItem><ListItemText primary="Adresse" secondary={selectedUniversity.adresse || 'N/A'} /></ListItem>
-                    <ListItem><ListItemText primary="Représentant" secondary={selectedUniversity.representant} /></ListItem>
+                    <ListItem><ListItemText primary="Représentant (Email)" secondary={selectedUniversity.representant?.email || 'N/A'} /></ListItem>
+                    <ListItem><ListItemText primary="Image URL" secondary={selectedUniversity.imageUrl || 'N/A'} /></ListItem>
                 </List>
             ) : (
                 <Typography>Aucune université sélectionnée.</Typography>

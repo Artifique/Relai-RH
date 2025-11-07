@@ -21,9 +21,7 @@ const menuItems = [
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', { easing: theme.transitions.easing.sharp, duration: theme.transitions.duration.enteringScreen }),
-  overflowX: 'hidden',
-  backgroundColor: '#1e293b',
-  color: 'white',
+    backgroundColor: '#0D1B2A',  color: 'white',
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -33,7 +31,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-  backgroundColor: '#1e293b',
+  backgroundColor: '#0D1B2A',
   color: 'white',
 });
 
@@ -156,7 +154,7 @@ const DashboardLayout: React.FC = () => {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader sx={{ justifyContent: 'space-between', pl: 2}}>
-            <img src={logo} alt="Logo" style={{ maxHeight: '40px', borderRadius: '4px', display: open ? 'block' : 'none' }} />
+            <img src={logo} alt="Logo" style={{ maxHeight: '60px', borderRadius: '4px', display: open ? 'block' : 'none' }} />
           <IconButton onClick={handleDrawerClose} sx={{color: 'white'}}>
             <ChevronLeftIcon />
           </IconButton>

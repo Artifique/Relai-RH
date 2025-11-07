@@ -1,0 +1,22 @@
+api.ts:16 
+ GET http://localhost:8080/api/universities 401 (Unauthorized)
+UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at callApi (api.ts:23:1)
+    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
+api.ts:16 
+ GET http://localhost:8080/api/universities 401 (Unauthorized)
+UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at callApi (api.ts:23:1)
+    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
+api.ts:16 
+ GET http://localhost:8080/api/universities 401 (Unauthorized)
+UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at callApi (api.ts:23:1)
+    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
+
+api.ts:16 
+ GET http://localhost:8080/api/universities 401 (Unauthorized)
+UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+    at callApi (api.ts:23:1)
+    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
+﻿

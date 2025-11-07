@@ -38,4 +38,9 @@ export const userService = {
   updateUserProfile: async (userId: number, profileData: Partial<UserProfile>, token?: string): Promise<UserProfile> => {
     return callApi<UserProfile>(`/users/${userId}/profile`, 'PUT', profileData, token);
   },
+
+  // Create a new member profile (profil_membre)
+  createProfilMembre: async (profileData: Omit<UserProfile, 'utilisateurId'> & { utilisateurId: number }, token: string): Promise<UserProfile> => {
+    return callApi<UserProfile>('/profils/admin', 'POST', profileData, token);
+  },
 };

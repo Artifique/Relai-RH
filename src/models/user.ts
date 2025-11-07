@@ -35,30 +35,30 @@ export interface User {
 }
 
 export interface UserProfile {
-  utilisateur_id: number;
+  utilisateurId: number; // Changé en camelCase
   nom: string;
   prenom: string;
   sexe?: Sexe;
-  date_naissance?: string; // ISO date string
-  lieu_naissance?: string;
+  dateNaissance?: string; // Changé en camelCase
+  lieuNaissance?: string; // Changé en camelCase
   telephone?: string;
-  adresse_actuelle?: string;
-  region_commune?: string;
-  cv_url?: string;
-  statut_actuel: StatutActuel;
-  universite_institut?: string;
-  faculte_departement?: string;
-  niveau_etudes?: string;
-  domaine_formation?: string;
-  annee_obtention_diplome?: number;
-  secteur_professionnel_vise?: string;
-  type_emploi_recherche?: TypeEmploiRecherche;
-  attentes_orientation?: boolean;
-  attentes_formation?: boolean;
-  attentes_accompagnement_recherche?: boolean;
-  attentes_mise_en_relation?: boolean;
-  attentes_stage?: boolean;
-  attentes_entrepreneuriat?: boolean;
+  adresseActuelle?: string; // Changé en camelCase
+  regionCommune?: string; // Changé en camelCase
+  cvUrl?: string; // Changé en camelCase
+  statutActuel: StatutActuel; // Changé en camelCase
+  universiteInstitut?: string; // Changé en camelCase
+  faculteDepartement?: string; // Changé en camelCase
+  niveauEtudes?: string; // Changé en camelCase
+  domaineFormation?: string; // Changé en camelCase
+  anneeObtentionDiplome?: number; // Changé en camelCase
+  secteurProfessionnelVise?: string; // Changé en camelCase
+  typeEmploiRecherche?: TypeEmploiRecherche; // Changé en camelCase
+  attentesOrientation?: boolean; // Changé en camelCase
+  attentesFormation?: boolean; // Changé en camelCase
+  attentesAccompagnementRecherche?: boolean; // Changé en camelCase
+  attentesMiseEnRelation?: boolean; // Changé en camelCase
+  attentesStage?: boolean; // Changé en camelCase
+  attentesEntrepreneuriat?: boolean; // Changé en camelCase
 }
 
 // Combined User with Profile for convenience

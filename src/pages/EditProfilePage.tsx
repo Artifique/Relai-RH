@@ -49,25 +49,25 @@ const EditProfilePage: React.FC = () => {
           setNom(profile.nom || '');
           setPrenom(profile.prenom || '');
           setSexe(profile.sexe);
-          setDateNaissance(profile.date_naissance ? profile.date_naissance.split('T')[0] : ''); // Format for input type="date"
+          setDateNaissance(profile.dateNaissance ? profile.dateNaissance.split('T')[0] : ''); // Format for input type="date"
           setTelephone(profile.telephone || '');
-          setAdresseActuelle(profile.adresse_actuelle || '');
-          setRegionCommune(profile.region_commune || '');
-          setCvUrl(profile.cv_url || '');
-          setStatutActuel(profile.statut_actuel);
-          setUniversiteInstitut(profile.universite_institut || '');
-          setFaculteDepartement(profile.faculte_departement || '');
-          setNiveauEtudes(profile.niveau_etudes || '');
-          setDomaineFormation(profile.domaine_formation || '');
-          setAnneeObtentionDiplome(profile.annee_obtention_diplome);
-          setSecteurProfessionnelVise(profile.secteur_professionnel_vise || '');
-          setTypeEmploiRecherche(profile.type_emploi_recherche);
-          setAttentesOrientation(profile.attentes_orientation || false);
-          setAttentesFormation(profile.attentes_formation || false);
-          setAttentesAccompagnementRecherche(profile.attentes_accompagnement_recherche || false);
-          setAttentesMiseEnRelation(profile.attentes_mise_en_relation || false);
-          setAttentesStage(profile.attentes_stage || false);
-          setAttentesEntrepreneuriat(profile.attentes_entrepreneuriat || false);
+          setAdresseActuelle(profile.adresseActuelle || '');
+          setRegionCommune(profile.regionCommune || '');
+          setCvUrl(profile.cvUrl || '');
+          setStatutActuel(profile.statutActuel);
+          setUniversiteInstitut(profile.universiteInstitut || '');
+          setFaculteDepartement(profile.faculteDepartement || '');
+          setNiveauEtudes(profile.niveauEtudes || '');
+          setDomaineFormation(profile.domaineFormation || '');
+          setAnneeObtentionDiplome(profile.anneeObtentionDiplome);
+          setSecteurProfessionnelVise(profile.secteurProfessionnelVise || '');
+          setTypeEmploiRecherche(profile.typeEmploiRecherche);
+          setAttentesOrientation(profile.attentesOrientation || false);
+          setAttentesFormation(profile.attentesFormation || false);
+          setAttentesAccompagnementRecherche(profile.attentesAccompagnementRecherche || false);
+          setAttentesMiseEnRelation(profile.attentesMiseEnRelation || false);
+          setAttentesStage(profile.attentesStage || false);
+          setAttentesEntrepreneuriat(profile.attentesEntrepreneuriat || false);
 
         } catch (err: any) {
           setError(err.message || 'Erreur lors du chargement du profil.');
@@ -95,25 +95,25 @@ const EditProfilePage: React.FC = () => {
       nom,
       prenom,
       sexe,
-      date_naissance: dateNaissance || undefined,
+      dateNaissance: dateNaissance || undefined,
       telephone,
-      adresse_actuelle: adresseActuelle || undefined,
-      region_commune: regionCommune || undefined,
-      cv_url: cvUrl || undefined,
-      statut_actuel: statutActuel,
-      universite_institut: universiteInstitut || undefined,
-      faculte_departement: faculteDepartement || undefined,
-      niveau_etudes: niveauEtudes || undefined,
-      domaine_formation: domaineFormation || undefined,
-      annee_obtention_diplome: anneeObtentionDiplome,
-      secteur_professionnel_vise: secteurProfessionnelVise || undefined,
-      type_emploi_recherche: typeEmploiRecherche,
-      attentes_orientation: attentesOrientation,
-      attentes_formation: attentesFormation,
-      attentes_accompagnement_recherche: attentesAccompagnementRecherche,
-      attentes_mise_en_relation: attentesMiseEnRelation,
-      attentes_stage: attentesStage,
-      attentes_entrepreneuriat: attentesEntrepreneuriat,
+      adresseActuelle: adresseActuelle || undefined,
+      regionCommune: regionCommune || undefined,
+      cvUrl: cvUrl || undefined,
+      statutActuel: statutActuel,
+      universiteInstitut: universiteInstitut || undefined,
+      faculteDepartement: faculteDepartement || undefined,
+      niveauEtudes: niveauEtudes || undefined,
+      domaineFormation: domaineFormation || undefined,
+      anneeObtentionDiplome: anneeObtentionDiplome,
+      secteurProfessionnelVise: secteurProfessionnelVise || undefined,
+      typeEmploiRecherche: typeEmploiRecherche || undefined,
+      attentesOrientation: attentesOrientation,
+      attentesFormation: attentesFormation,
+      attentesAccompagnementRecherche: attentesAccompagnementRecherche,
+      attentesMiseEnRelation: attentesMiseEnRelation,
+      attentesStage: attentesStage,
+      attentesEntrepreneuriat: attentesEntrepreneuriat,
     };
 
     try {

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { authService, LoginRequest, AuthResponse } from '../services/authService';
+import { authService, LoginRequest, AuthSignInResponse } from '../services/authService';
 import { UserRole } from '../models/user';
 
 interface AuthState {
@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (credentials: LoginRequest) => {
     try {
-      const response: AuthResponse = await authService.signin(credentials);
+      const response: AuthSignInResponse = await authService.signin(credentials);
       const { token: newToken, id, email, role } = response;
 
       setToken(newToken);

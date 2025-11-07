@@ -87,36 +87,36 @@ const ProfilePage: React.FC = () => {
               Informations Personnelles
             </Typography>
             <Typography variant="body1"><strong>Sexe:</strong> {userProfile.sexe || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Date de Naissance:</strong> {userProfile.date_naissance ? new Date(userProfile.date_naissance).toLocaleDateString() : 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Lieu de Naissance:</strong> {userProfile.lieu_naissance || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Date de Naissance:</strong> {userProfile.dateNaissance ? new Date(userProfile.dateNaissance).toLocaleDateString() : 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Lieu de Naissance:</strong> {userProfile.lieuNaissance || 'Non spécifié'}</Typography>
             <Typography variant="body1"><strong>Téléphone:</strong> {userProfile.telephone || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Adresse:</strong> {userProfile.adresse_actuelle || 'Non spécifiée'}</Typography>
-            <Typography variant="body1"><strong>Région/Commune:</strong> {userProfile.region_commune || 'Non spécifiée'}</Typography>
-            <Typography variant="body1"><strong>URL CV:</strong> {userProfile.cv_url ? <MuiLink href={userProfile.cv_url} target="_blank">Voir le CV</MuiLink> : 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Adresse:</strong> {userProfile.adresseActuelle || 'Non spécifiée'}</Typography>
+            <Typography variant="body1"><strong>Région/Commune:</strong> {userProfile.regionCommune || 'Non spécifiée'}</Typography>
+            <Typography variant="body1"><strong>URL CV:</strong> {userProfile.cvUrl ? <MuiLink href={userProfile.cvUrl} target="_blank">Voir le CV</MuiLink> : 'Non spécifié'}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
               Informations Professionnelles
             </Typography>
-            <Typography variant="body1"><strong>Statut Actuel:</strong> {userProfile.statut_actuel || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Université/Institut:</strong> {userProfile.universite_institut || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Faculté/Département:</strong> {userProfile.faculte_departement || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Niveau d'Études:</strong> {userProfile.niveau_etudes || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Domaine de Formation:</strong> {userProfile.domaine_formation || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Année Diplôme:</strong> {userProfile.annee_obtention_diplome || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Secteur Visé:</strong> {userProfile.secteur_professionnel_vise || 'Non spécifié'}</Typography>
-            <Typography variant="body1"><strong>Type Emploi Recherché:</strong> {userProfile.type_emploi_recherche || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Statut Actuel:</strong> {userProfile.statutActuel || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Université/Institut:</strong> {userProfile.universiteInstitut || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Faculté/Département:</strong> {userProfile.faculteDepartement || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Niveau d'Études:</strong> {userProfile.niveauEtudes || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Domaine de Formation:</strong> {userProfile.domaineFormation || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Année Diplôme:</strong> {userProfile.anneeObtentionDiplome || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Secteur Visé:</strong> {userProfile.secteurProfessionnelVise || 'Non spécifié'}</Typography>
+            <Typography variant="body1"><strong>Type Emploi Recherché:</strong> {userProfile.typeEmploiRecherche || 'Non spécifié'}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', mt: 2 }}>
               Attentes
             </Typography>
-            <Typography variant="body1"><strong>Orientation:</strong> {userProfile.attentes_orientation ? 'Oui' : 'Non'}</Typography>
-            <Typography variant="body1"><strong>Formation:</strong> {userProfile.attentes_formation ? 'Oui' : 'Non'}</Typography>
-            <Typography variant="body1"><strong>Accompagnement Recherche:</strong> {userProfile.attentes_accompagnement_recherche ? 'Oui' : 'Non'}</Typography>
-            <Typography variant="body1"><strong>Mise en Relation:</strong> {userProfile.attentes_mise_en_relation ? 'Oui' : 'Non'}</Typography>
-            <Typography variant="body1"><strong>Stage:</strong> {userProfile.attentes_stage ? 'Oui' : 'Non'}</Typography>
-            <Typography variant="body1"><strong>Entrepreneuriat:</strong> {userProfile.attentes_entrepreneuriat ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Orientation:</strong> {userProfile.attentesOrientation ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Formation:</strong> {userProfile.attentesFormation ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Accompagnement Recherche:</strong> {userProfile.attentesAccompagnementRecherche ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Mise en Relation:</strong> {userProfile.attentesMiseEnRelation ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Stage:</strong> {userProfile.attentesStage ? 'Oui' : 'Non'}</Typography>
+            <Typography variant="body1"><strong>Entrepreneuriat:</strong> {userProfile.attentesEntrepreneuriat ? 'Oui' : 'Non'}</Typography>
           </Grid>
         </Grid>
       </Paper>

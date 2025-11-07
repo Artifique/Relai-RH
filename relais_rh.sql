@@ -134,6 +134,16 @@ CREATE TABLE candidature_bourse (
     UNIQUE (bourse_id, utilisateur_id)
 );
 
+-- Table des Profils des Représentants d'Université
+CREATE TABLE profil_representant (
+    utilisateur_id INTEGER PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    telephone VARCHAR(50),
+    adresse VARCHAR(255),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
+);
+
 -- Table des Ressources du Laboratoire des Compétences Métiers
 CREATE TABLE ressource_labo_competences (
     id SERIAL PRIMARY KEY,
