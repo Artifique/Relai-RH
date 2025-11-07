@@ -9,6 +9,7 @@ import {
 import { Search, Edit, Delete, Visibility } from '@mui/icons-material';
 import { universityService } from '../../services/universityService';
 import { University } from '../../models/university';
+import { useAuth } from '../../context/AuthContext';
 
 const UniversityManagementPage: React.FC = () => {
   const [universities, setUniversities] = useState<University[]>([]);
@@ -16,18 +17,59 @@ const UniversityManagementPage: React.FC = () => {
   const [viewOpen, setViewOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
+  const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchUniversities = async () => {
+      if (!token) {
+        console.log("No token found, cannot fetch universities.");
+        return;
+      }
       try {
-        const data = await universityService.getAllUniversities();
+        const data = await universityService.getAllUniversities(token);
         setUniversities(data);
       } catch (error) {
         console.error("Erreur lors de la récupération des universités:", error);
       }
     };
     fetchUniversities();
-  }, []);
+  }, [token]);
+
+  useEffect(() => {
+    if (selectedUniversity?.imageUrl && token) {
+      const fetchImage = async () => {
+        try {
+          const fullImageUrl = `http://localhost:8080/uploads/${selectedUniversity.imageUrl}`;
+          const response = await fetch(fullImageUrl, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+          }
+
+          const imageBlob = await response.blob();
+          const url = URL.createObjectURL(imageBlob);
+          setImageObjectUrl(url);
+        } catch (error) {
+          console.error("Erreur lors du chargement de l'image:", error);
+          setImageObjectUrl(null);
+        }
+      };
+      fetchImage();
+    } else {
+      setImageObjectUrl(null);
+    }
+
+    return () => {
+      if (imageObjectUrl) {
+        URL.revokeObjectURL(imageObjectUrl);
+      }
+    };
+  }, [selectedUniversity, token, imageObjectUrl]);
 
   // GESTION DES MODALES
   const handleAddClick = () => {
@@ -141,7 +183,16 @@ const UniversityManagementPage: React.FC = () => {
                     <ListItem><ListItemText primary="Email de Contact" secondary={selectedUniversity.emailContact} /></ListItem>
                     <ListItem><ListItemText primary="Adresse" secondary={selectedUniversity.adresse || 'N/A'} /></ListItem>
                     <ListItem><ListItemText primary="Représentant (Email)" secondary={selectedUniversity.representant?.email || 'N/A'} /></ListItem>
-                    <ListItem><ListItemText primary="Image URL" secondary={selectedUniversity.imageUrl || 'N/A'} /></ListItem>
+                    {selectedUniversity.imageUrl && imageObjectUrl && (
+                        <ListItem>
+                            <ListItemText primary="Image" />
+                            <img 
+                                src={imageObjectUrl}
+                                alt="University Logo"
+                                style={{ maxWidth: '100%', height: 'auto', marginTop: '8px' }}
+                            />
+                        </ListItem>
+                    )}
                 </List>
             ) : (
                 <Typography>Aucune université sélectionnée.</Typography>

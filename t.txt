@@ -1,22 +1,41 @@
-api.ts:16 
- GET http://localhost:8080/api/universities 401 (Unauthorized)
-UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
-    at callApi (api.ts:23:1)
-    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
-api.ts:16 
- GET http://localhost:8080/api/universities 401 (Unauthorized)
-UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
-    at callApi (api.ts:23:1)
-    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
-api.ts:16 
- GET http://localhost:8080/api/universities 401 (Unauthorized)
-UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
-    at callApi (api.ts:23:1)
-    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
+GET http://localhost:8080/api/universites
 
-api.ts:16 
- GET http://localhost:8080/api/universities 401 (Unauthorized)
-UniversityManagementPage.tsx:26 Erreur lors de la récupération des universités: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
-    at callApi (api.ts:23:1)
-    at async fetchUniversities (UniversityManagementPage.tsx:23:1)
-﻿
+reponse: [
+    {
+        "id": 1,
+        "nom": "ENI-ABT",
+        "adresse": "Bamako, MedinaCoura",
+        "emailContact": "eniabt@gmail.com",
+        "imageUrl": null,
+        "representant": {
+            "id": 4,
+            "email": "sidi@gmail.com",
+            "motDePasseHache": "$2a$10$12xfokXmCQ9Cq2aAw2dwzeevYP.whJ7/UsnYdHueaZr520IFs3YFu",
+            "role": "REPRESENTANT_UNIVERSITE",
+            "dateInscription": null,
+            "estActif": false
+        }
+    },
+    {
+        "id": 3,
+        "nom": "FST",
+        "adresse": "Bamako, Mali",
+        "emailContact": "eniabt@gmail.com",
+        "imageUrl": "c2853e85-3038-4c10-85fe-f133c30f324a-relais_rh.png",
+        "representant": {
+            "id": 4,
+            "email": "sidi@gmail.com",
+            "motDePasseHache": "$2a$10$12xfokXmCQ9Cq2aAw2dwzeevYP.whJ7/UsnYdHueaZr520IFs3YFu",
+            "role": "REPRESENTANT_UNIVERSITE",
+            "dateInscription": null,
+            "estActif": false
+        }
+    }
+]
+
+Pour afficher l image :
+
+  Étape 2: Construire l'URL complète de l'image
+   * Action : Combinez la valeur imageUrl de la réponse avec l'URL de base des images.
+   * URL de base des images : http://localhost:8080/uploads/.
+   * Exemple JavaScript : const fullImageUrl = http://localhost:8080/uploads/${universiteData.imageUrl}\`;`

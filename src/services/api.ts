@@ -13,11 +13,16 @@ export async function callApi<T>(
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const fullUrl = `${API_BASE_URL}${endpoint}`;
+  console.log(`Requesting URL: ${fullUrl} with method ${method}`);
+
+  const response = await fetch(fullUrl, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
   });
+
+  console.log(`Response status for ${fullUrl}: ${response.status}`);
 
   if (!response.ok) {
     const errorData = await response.json();
