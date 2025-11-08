@@ -4,7 +4,7 @@ import {
     Box, Typography, Card, CardContent, TextField, InputAdornment, 
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
     Paper, IconButton, Tooltip, Button, Dialog, DialogTitle, DialogContent, 
-    DialogActions, Grid, List, ListItem, ListItemText, FormControl, InputLabel, Select, MenuItem
+    DialogActions, Grid, List, ListItem, ListItemText, FormControl, InputLabel, Select, MenuItem, TablePagination
 } from '@mui/material';
 import { Search, Edit, Delete, Visibility } from '@mui/icons-material';
 import { universityService } from '../../services/universityService';
@@ -13,6 +13,7 @@ import { useAuth } from '../../context/AuthContext';
 import { userService } from '../../services/userService';
 import { FullUser, UserRole } from '../../models/user';
 // import { uploadFile } from '../../services/api'; // Removed uploadFile import
+import SuccessMessageDialog from '../../components/common/SuccessMessageDialog';
 
 const UniversityManagementPage: React.FC = () => {
   const [universities, setUniversities] = useState<University[]>([]);
@@ -30,6 +31,15 @@ const UniversityManagementPage: React.FC = () => {
   const [representantId, setRepresentantId] = useState<number | ''>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [representativeUsers, setRepresentativeUsers] = useState<FullUser[]>([]);
+
+  // Success Dialog states
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [successDialogTitle, setSuccessDialogTitle] = useState('');
+  const [successDialogMessage, setSuccessDialogMessage] = useState('');
+
+  // Pagination states
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -152,11 +162,26 @@ const UniversityManagementPage: React.FC = () => {
     setImageFile(null);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedUniversity) {
-      setUniversities(universities.filter(u => u.id !== selectedUniversity.id));
+      try {
+        await universityService.deleteUniversity(selectedUniversity.id, token as string);
+        setUniversities(universities.filter(u => u.id !== selectedUniversity.id));
+        handleClose();
+        setSuccessDialogTitle('Succès');
+        setSuccessDialogMessage(`L'université "${selectedUniversity.nom}" a été supprimée avec succès.`);
+        setShowSuccessDialog(true);
+      } catch (error) {
+        console.error("Erreur lors de la suppression de l'université:", error);
+        // Optionally, show an error message to the user
+      }
     }
-    handleClose();
+  };
+
+  const handleCloseSuccessDialog = () => {
+    setShowSuccessDialog(false);
+    setSuccessDialogTitle('');
+    setSuccessDialogMessage('');
   };
 
   const handleFormSubmit = async (event: React.FormEvent) => {
@@ -183,18 +208,24 @@ const UniversityManagementPage: React.FC = () => {
 
     try {
       let responseUniversity: University;
+      let successMessage: string;
       if (selectedUniversity) {
         // Update existing university
         responseUniversity = await universityService.updateUniversity(selectedUniversity.id, formData, token as string);
+        successMessage = `L'université "${responseUniversity.nom}" a été modifiée avec succès.`;
       } else {
         // Create new university
         responseUniversity = await universityService.createUniversity(formData, token as string);
+        successMessage = `L'université "${responseUniversity.nom}" a été ajoutée avec succès.`;
       }
       console.log("University saved:", responseUniversity);
       // Refresh the list of universities
       const updatedUniversities = await universityService.getAllUniversities(token as string);
       setUniversities(updatedUniversities);
       handleClose();
+      setSuccessDialogTitle('Succès');
+      setSuccessDialogMessage(successMessage);
+      setShowSuccessDialog(true);
     } catch (error) {
       console.error("Error saving university:", error);
       // Optionally, show an error message to the user
@@ -235,7 +266,10 @@ const UniversityManagementPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {universities.map((uni) => (
+                {(rowsPerPage > 0
+                  ? universities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  : universities
+                ).map((uni) => (
                   <TableRow key={uni.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell>{uni.nom}</TableCell>
                     <TableCell>{uni.emailContact}</TableCell>
@@ -250,6 +284,20 @@ const UniversityManagementPage: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={universities.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={(event, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(parseInt(event.target.value, 10));
+              setPage(0);
+            }}
+            labelRowsPerPage="Lignes par page :"
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to} sur ${count}`}
+          />
         </CardContent>
       </Card>
 
@@ -343,6 +391,13 @@ const UniversityManagementPage: React.FC = () => {
           <Button onClick={handleDeleteConfirm} variant="contained" color="error">Supprimer</Button>
         </DialogActions>
       </Dialog>
+
+      <SuccessMessageDialog
+        open={showSuccessDialog}
+        title={successDialogTitle}
+        message={successDialogMessage}
+        onClose={handleCloseSuccessDialog}
+      />
     </Box>
   );
 };
