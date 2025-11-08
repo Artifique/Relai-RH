@@ -1,41 +1,5 @@
-GET http://localhost:8080/api/universites
-
-reponse: [
-    {
-        "id": 1,
-        "nom": "ENI-ABT",
-        "adresse": "Bamako, MedinaCoura",
-        "emailContact": "eniabt@gmail.com",
-        "imageUrl": null,
-        "representant": {
-            "id": 4,
-            "email": "sidi@gmail.com",
-            "motDePasseHache": "$2a$10$12xfokXmCQ9Cq2aAw2dwzeevYP.whJ7/UsnYdHueaZr520IFs3YFu",
-            "role": "REPRESENTANT_UNIVERSITE",
-            "dateInscription": null,
-            "estActif": false
-        }
-    },
-    {
-        "id": 3,
-        "nom": "FST",
-        "adresse": "Bamako, Mali",
-        "emailContact": "eniabt@gmail.com",
-        "imageUrl": "c2853e85-3038-4c10-85fe-f133c30f324a-relais_rh.png",
-        "representant": {
-            "id": 4,
-            "email": "sidi@gmail.com",
-            "motDePasseHache": "$2a$10$12xfokXmCQ9Cq2aAw2dwzeevYP.whJ7/UsnYdHueaZr520IFs3YFu",
-            "role": "REPRESENTANT_UNIVERSITE",
-            "dateInscription": null,
-            "estActif": false
-        }
-    }
-]
-
-Pour afficher l image :
-
-  Étape 2: Construire l'URL complète de l'image
-   * Action : Combinez la valeur imageUrl de la réponse avec l'URL de base des images.
-   * URL de base des images : http://localhost:8080/uploads/.
-   * Exemple JavaScript : const fullImageUrl = http://localhost:8080/uploads/${universiteData.imageUrl}\`;`
+api.ts:28 
+ POST http://localhost:8080/api/universites 500 (Internal Server Error)
+UniversityManagementPage.tsx:199 Error saving university: Error: Something went wrong
+    at callApi (api.ts:38:1)
+    at async handleFormSubmit (UniversityManagementPage.tsx:191:1)

@@ -6,23 +6,28 @@ export async function callApi<T>(
   body?: any,
   token?: string
 ): Promise<T> {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
+  const fullUrl = `${API_BASE_URL}${endpoint}`;
+
+  const headers: HeadersInit = {};
+  let requestBody: BodyInit | undefined;
+
+  if (body instanceof FormData) {
+    requestBody = body;
+    // Do not set Content-Type header for FormData, browser will set it automatically with boundary
+  } else if (body) {
+    headers['Content-Type'] = 'application/json';
+    requestBody = JSON.stringify(body);
+  }
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const fullUrl = `${API_BASE_URL}${endpoint}`;
-  console.log(`Requesting URL: ${fullUrl} with method ${method}`);
-
   const response = await fetch(fullUrl, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: requestBody,
   });
-
-  console.log(`Response status for ${fullUrl}: ${response.status}`);
 
   if (!response.ok) {
     const errorData = await response.json();

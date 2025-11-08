@@ -4,12 +4,15 @@ import {
     Box, Typography, Card, CardContent, TextField, InputAdornment, 
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
     Paper, IconButton, Tooltip, Button, Dialog, DialogTitle, DialogContent, 
-    DialogActions, Grid, List, ListItem, ListItemText
+    DialogActions, Grid, List, ListItem, ListItemText, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { Search, Edit, Delete, Visibility } from '@mui/icons-material';
 import { universityService } from '../../services/universityService';
-import { University } from '../../models/university';
+import { University, CreateUniversityDto, UpdateUniversityDto } from '../../models/university';
 import { useAuth } from '../../context/AuthContext';
+import { userService } from '../../services/userService';
+import { FullUser, UserRole } from '../../models/user';
+// import { uploadFile } from '../../services/api'; // Removed uploadFile import
 
 const UniversityManagementPage: React.FC = () => {
   const [universities, setUniversities] = useState<University[]>([]);
@@ -19,6 +22,14 @@ const UniversityManagementPage: React.FC = () => {
   const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
   const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
   const { token } = useAuth();
+
+  // Form states
+  const [nom, setNom] = useState('');
+  const [emailContact, setEmailContact] = useState('');
+  const [adresse, setAdresse] = useState('');
+  const [representantId, setRepresentantId] = useState<number | ''>('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [representativeUsers, setRepresentativeUsers] = useState<FullUser[]>([]);
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -34,6 +45,42 @@ const UniversityManagementPage: React.FC = () => {
       }
     };
     fetchUniversities();
+  }, [token]);
+
+  useEffect(() => {
+    if (selectedUniversity) {
+      console.log("selectedUniversity changed:", selectedUniversity);
+      setNom(selectedUniversity.nom);
+      setEmailContact(selectedUniversity.emailContact);
+      setAdresse(selectedUniversity.adresse || '');
+      const repId = selectedUniversity.representant?.id || '';
+      setRepresentantId(repId);
+      console.log("Setting representantId to:", repId);
+      // Reset image file when selecting a new university
+      setImageFile(null);
+    } else {
+      console.log("selectedUniversity is null, resetting form.");
+      setNom('');
+      setEmailContact('');
+      setAdresse('');
+      setRepresentantId('');
+      setImageFile(null);
+    }
+  }, [selectedUniversity]);
+
+  useEffect(() => {
+    const fetchRepresentativeUsers = async () => {
+      if (!token) return;
+      try {
+        const allUsers = await userService.getAllUsers(token);
+        const reps = allUsers.filter(user => user.role === UserRole.REPRESENTANT_UNIVERSITE);
+        setRepresentativeUsers(reps);
+        console.log("Representative users loaded:", reps);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des représentants:", error);
+      }
+    };
+    fetchRepresentativeUsers();
   }, [token]);
 
   useEffect(() => {
@@ -97,6 +144,12 @@ const UniversityManagementPage: React.FC = () => {
     setViewOpen(false);
     setDeleteOpen(false);
     setSelectedUniversity(null);
+    // Reset form states on close
+    setNom('');
+    setEmailContact('');
+    setAdresse('');
+    setRepresentantId('');
+    setImageFile(null);
   };
 
   const handleDeleteConfirm = () => {
@@ -104,6 +157,48 @@ const UniversityManagementPage: React.FC = () => {
       setUniversities(universities.filter(u => u.id !== selectedUniversity.id));
     }
     handleClose();
+  };
+
+  const handleFormSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!token) {
+      console.error("No token available for submission.");
+      return;
+    }
+
+    const universityData = {
+      nom,
+      emailContact,
+      adresse,
+      imageUrl: selectedUniversity?.imageUrl || undefined, // Keep existing image if no new one, otherwise undefined
+      representant: representantId ? { id: representantId as number } : undefined,
+    };
+
+    const formData = new FormData();
+    formData.append('universite', new Blob([JSON.stringify(universityData)], { type: 'application/json' }));
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    try {
+      let responseUniversity: University;
+      if (selectedUniversity) {
+        // Update existing university
+        responseUniversity = await universityService.updateUniversity(selectedUniversity.id, formData, token as string);
+      } else {
+        // Create new university
+        responseUniversity = await universityService.createUniversity(formData, token as string);
+      }
+      console.log("University saved:", responseUniversity);
+      // Refresh the list of universities
+      const updatedUniversities = await universityService.getAllUniversities(token as string);
+      setUniversities(updatedUniversities);
+      handleClose();
+    } catch (error) {
+      console.error("Error saving university:", error);
+      // Optionally, show an error message to the user
+    }
   };
 
   return (
@@ -162,14 +257,52 @@ const UniversityManagementPage: React.FC = () => {
       <Dialog open={formOpen} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>{selectedUniversity ? 'Modifier l\'université' : 'Ajouter une université'}</DialogTitle>
         <DialogContent dividers sx={{ pt: 2 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.nom} autoFocus required margin="normal" id="nom" label="Nom de l'université" type="text" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.emailContact} required margin="normal" id="emailContact" label="Email de contact" type="email" fullWidth variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.adresse} margin="normal" id="adresse" label="Adresse" type="text" fullWidth multiline rows={3} variant="outlined" /></Grid>
-            <Grid item xs={12}><TextField defaultValue={selectedUniversity?.representant?.email} margin="normal" id="representantEmail" label="Email du Représentant" type="text" fullWidth variant="outlined" /></Grid>
-          </Grid>
+          <form onSubmit={handleFormSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}><TextField value={nom} onChange={(e) => setNom(e.target.value)} autoFocus required margin="normal" id="nom" label="Nom de l'université" type="text" fullWidth variant="outlined" /></Grid>
+              <Grid item xs={12}><TextField value={emailContact} onChange={(e) => setEmailContact(e.target.value)} required margin="normal" id="emailContact" label="Email de contact" type="email" fullWidth variant="outlined" /></Grid>
+              <Grid item xs={12}><TextField value={adresse} onChange={(e) => setAdresse(e.target.value)} margin="normal" id="adresse" label="Adresse" type="text" fullWidth multiline rows={3} variant="outlined" /></Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="representant-select-label">Représentant</InputLabel>
+                  <Select
+                    labelId="representant-select-label"
+                    id="representantId"
+                    value={representantId}
+                    label="Représentant"
+                    onChange={(e) => setRepresentantId(e.target.value as number)}
+                  >
+                    <MenuItem value=""><em>Aucun</em></MenuItem>
+                    {representativeUsers.map((user) => (
+                      <MenuItem key={user.id} value={user.id}>
+                        {user.email} (ID: {user.id})
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="raised-button-file"
+                  multiple
+                  type="file"
+                  onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+                />
+                <label htmlFor="raised-button-file">
+                  <Button variant="contained" component="span">
+                    {imageFile ? imageFile.name : 'Uploader une image'}
+                  </Button>
+                </label>
+              </Grid>
+            </Grid>
+            <DialogActions>
+              <Button onClick={handleClose}>Annuler</Button>
+              <Button type="submit" variant="contained">{selectedUniversity ? 'Enregistrer' : 'Ajouter'}</Button>
+            </DialogActions>
+          </form>
         </DialogContent>
-        <DialogActions><Button onClick={handleClose}>Annuler</Button><Button onClick={handleClose} variant="contained">{selectedUniversity ? 'Enregistrer' : 'Ajouter'}</Button></DialogActions>
       </Dialog>
 
       {/* MODALE VOIR DÉTAILS */}

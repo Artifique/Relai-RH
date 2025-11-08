@@ -1,4 +1,4 @@
-import { University, CreateUniversityDto, UpdateUniversityDto } from '../models/university';
+import { University } from '../models/university';
 import { callApi } from './api';
 
 // --- University Service Functions ---
@@ -15,13 +15,13 @@ export const universityService = {
   },
 
   // Create a new university
-  createUniversity: async (universityData: CreateUniversityDto, token?: string): Promise<University> => {
-    return callApi<University>('/universities', 'POST', universityData, token);
+  createUniversity: async (formData: FormData, token?: string): Promise<University> => {
+    return callApi<University>('/universites', 'POST', formData, token);
   },
 
   // Update an existing university
-  updateUniversity: async (id: number, universityData: UpdateUniversityDto, token?: string): Promise<University> => {
-    return callApi<University>(`/universites/${id}`, 'PUT', universityData, token);
+  updateUniversity: async (id: number, formData: FormData, token?: string): Promise<University> => {
+    return callApi<University>(`/universites/${id}`, 'PUT', formData, token);
   },
 
   // Delete a university

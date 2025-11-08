@@ -20,12 +20,14 @@ export interface CreateUniversityDto {
   nom: string;
   adresse?: string;
   emailContact?: string;
-  representant_id?: number;
+  imageUrl?: string;
+  representant?: { id: number };
 }
 
 export interface UpdateUniversityDto {
   nom?: string;
   adresse?: string;
   emailContact?: string;
-  representant_id?: number;
+  imageUrl?: string;
+  representant?: { id: number };
 }
