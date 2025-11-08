@@ -123,7 +123,7 @@ const ActivitesPage: React.FC = () => {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={activity.imageUrl || 'https://placehold.co/600x400'} // Fallback for image
+                    image={activity.imageUrl ? `http://localhost:8080/uploads/${activity.imageUrl}` : 'https://placehold.co/600x400'} // Construct full URL
                     alt={activity.titre}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>

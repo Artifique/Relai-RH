@@ -191,15 +191,15 @@ const UniversitesPage: React.FC = () => {
 
                   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, textAlign: 'center', transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out', '&:hover': { transform: 'translateY(-10px)', boxShadow: 6 } }}>
 
-                    <Avatar
+                                      <Avatar
 
-                      src={university.imageUrl || 'https://placehold.co/150'} // Fallback for logo
+                                        src={university.imageUrl ? `http://localhost:8080/uploads/${university.imageUrl}` : 'https://placehold.co/150'} // Construct full URL
 
-                      alt={`${university.nom} logo`}
+                                        alt={`${university.nom} logo`}
 
-                      sx={{ width: 80, height: 80, mb: 2 }}
+                                        sx={{ width: 80, height: 80, mb: 2 }}
 
-                    />
+                                      />
 
                     <CardContent sx={{ flexGrow: 1 }}>
 

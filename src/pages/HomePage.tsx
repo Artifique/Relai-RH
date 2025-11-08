@@ -244,7 +244,7 @@ const HomePage: React.FC = () => {
                   <JobCard key={offre.id}>
                     <CardContent sx={{ flexGrow: 1 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Avatar src={offre.imageUrl || 'https://placehold.co/50x50'} alt={`${offre.entreprise} logo`} sx={{ width: 50, height: 50, mr: 2 }} />
+                        <Avatar src={offre.imageUrl ? `http://localhost:8080/uploads/${offre.imageUrl}` : 'https://placehold.co/50x50'} alt={`${offre.entreprise} logo`} sx={{ width: 50, height: 50, mr: 2 }} />
                         <Box>
                           <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
                             {offre.titre}
