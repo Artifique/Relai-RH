@@ -1,11 +1,5 @@
-Compiled with problems:
-×
-ERROR in src/pages/dashboard/RapportEtStatistiquePage.tsx:194:66
-TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
-    192 |                       fill="#8884d8"
-    193 |                       dataKey="value"
-  > 194 |                       label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
-        |                                                                  ^^^^^^^^^^^^^^
-    195 |                     >
-    196 |                       {candidaturePieData.map((entry, index) => (
-    197 |                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+600x400:1 
+ GET https://via.placeholder.com/600x400 net::ERR_NAME_NOT_RESOLVED
+
+﻿
+

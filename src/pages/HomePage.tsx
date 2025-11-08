@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Typography, Button, Grid, Card, Box, CardContent, CardActions, Avatar, Chip } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Container, Typography, Button, Grid, Card, Box, CardContent, CardActions, Avatar, Chip, CircularProgress, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SchoolIcon from '@mui/icons-material/School';
 import WorkIcon from '@mui/icons-material/Work';
@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom';
 import Slider from 'react-slick'; // Import Slider
 import 'slick-carousel/slick/slick.css'; // Import slick-carousel CSS
 import 'slick-carousel/slick/slick-theme.css'; // Import slick-carousel theme CSS
+import { offreEmploiService } from '../services/offreEmploiService';
+import { OffreEmploi } from '../models/activity'; // Assuming OffreEmploi is defined here
+import { useAuth } from '../context/AuthContext';
 
 const sliderContent = [
   {
@@ -33,49 +36,6 @@ const sliderContent = [
     description: 'Explorez les bourses d\'employabilité et les offres d\'emploi.',
     buttonText: 'Découvrir les bourses',
     buttonLink: '/bourses',
-  },
-];
-
-const dummyJobs = [
-  {
-    id: 1,
-    title: 'Développeur Frontend',
-    company: 'Orange Mali',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/orangemali/200',
-    contractType: 'CDI',
-  },
-  {
-    id: 2,
-    title: 'Chef de Projet Digital',
-    company: 'Malitel',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/malitel/200',
-    contractType: 'CDD',
-  },
-  {
-    id: 3,
-    title: 'Data Analyst',
-    company: 'Ecobank Mali',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/bdm/200',
-    contractType: 'Stage',
-  },
-  {
-    id: 4,
-    title: 'UI/UX Designer',
-    company: 'Jumia Mali',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/jumiamali/200',
-    contractType: 'CDI',
-  },
-  {
-    id: 5,
-    title: 'Développeur Backend',
-    company: 'Société Malienne de Transports',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/smt/200',
-    contractType: 'CDI',
   },
 ];
 
@@ -134,6 +94,27 @@ const JobCard = styled(Card)(({ theme }) => ({
 }));
 
 const HomePage: React.FC = () => {
+  const { token } = useAuth();
+  const [offres, setOffres] = useState<OffreEmploi[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOffres = async () => {
+      setLoading(true);
+      try {
+        const data = await offreEmploiService.getAllOffresEmploi(token as string);
+        setOffres(data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des offres d'emploi:", err);
+        setError("Impossible de charger les offres d'emploi. Veuillez réessayer.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOffres();
+  }, [token]);
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -169,6 +150,23 @@ const HomePage: React.FC = () => {
       },
     ],
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <CircularProgress />
+        <Typography variant="h6" sx={{ ml: 2 }}>Chargement des offres d'emploi...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container sx={{ py: 8 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
 
   return (
     <Box sx={{ overflowX: 'hidden' }}>
@@ -241,34 +239,40 @@ const HomePage: React.FC = () => {
           </Typography>
           <Box sx={{ overflow: 'hidden' }}>
             <Slider {...jobSliderSettings}>
-              {dummyJobs.map((job) => (
-                <JobCard key={job.id}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Avatar src={job.logoUrl} alt={`${job.company} logo`} sx={{ width: 50, height: 50, mr: 2 }} />
-                      <Box>
-                        <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
-                          {job.title}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                          {job.company}
-                        </Typography>
+              {offres.length > 0 ? (
+                offres.map((offre) => (
+                  <JobCard key={offre.id}>
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                        <Avatar src={offre.imageUrl || 'https://placehold.co/50x50'} alt={`${offre.entreprise} logo`} sx={{ width: 50, height: 50, mr: 2 }} />
+                        <Box>
+                          <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
+                            {offre.titre}
+                          </Typography>
+                          <Typography variant="body1" color="text.secondary">
+                            {offre.entreprise || 'N/A'}
+                          </Typography>
+                        </Box>
                       </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {job.location}
-                      </Typography>
-                      <Chip label={job.contractType} color="primary" size="small" />
-                    </Box>
-                  </CardContent>
-                  <CardActions sx={{ justifyContent: 'flex-end' }}>
-                    <Button size="small" component={Link} to={`/emploi/${job.id}`}>
-                      Postuler
-                    </Button>
-                  </CardActions>
-                </JobCard>
-              ))}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {offre.lieu || 'N/A'}
+                        </Typography>
+                        <Chip label={offre.typeContrat || 'N/A'} color="primary" size="small" />
+                      </Box>
+                    </CardContent>
+                    <CardActions sx={{ justifyContent: 'flex-end' }}>
+                      <Button size="small" component={Link} to={`/emploi/${offre.id}`}>
+                        Postuler
+                      </Button>
+                    </CardActions>
+                  </JobCard>
+                ))
+              ) : (
+                <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', mt: 4 }}>
+                  Aucune offre d'emploi récente trouvée.
+                </Typography>
+              )}
             </Slider>
           </Box>
         </Container>
@@ -278,5 +282,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
-

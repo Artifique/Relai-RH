@@ -1,62 +1,63 @@
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { UserRole } from '../models/user'; // Import UserRole
+import { UserRole } from '../models/user';
 import { Link } from 'react-router-dom';
-import { Box, Typography, Container, TextField, InputAdornment, IconButton, Button, Grid, Card, CardMedia, CardContent, CardActions } from '@mui/material';
+import { Box, Typography, Container, TextField, InputAdornment, IconButton, Button, Grid, Card, CardMedia, CardContent, CardActions, CircularProgress, Alert } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import s1Image from '../assets/s1.jpg';
-
-interface Activity {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-  location: string;
-  organizer: string;
-  imageUrl: string;
-}
-
-const dummyActivities: Activity[] = [
-  {
-    id: 1,
-    title: 'Atelier de développement web',
-    description: 'Apprenez les bases du développement web avec React et Node.js.',
-    date: '15 novembre 2025',
-    location: 'Bamako, Mali',
-    organizer: 'Université des Sciences Sociales et de Gestion de Bamako',
-    imageUrl: 'https://picsum.photos/seed/devmali/600/400',
-  },
-  {
-    id: 2,
-    title: "Conférence sur l'entrepreneuriat local",
-    description: 'Découvrez les clés du succès entrepreneurial avec des experts maliens.',
-    date: '20 novembre 2025',
-    location: 'Centre International de Conférences de Bamako',
-    organizer: 'Chambre de Commerce et d Industrie du Mali',
-    imageUrl: 'https://picsum.photos/seed/entrepreneurmali/600/400',
-  },
-  {
-    id: 3,
-    title: "Forum de l'emploi des jeunes",
-    description: 'Rencontrez des entreprises maliennes qui recrutent et postulez directement.',
-    date: '25 novembre 2025',
-    location: 'Palais de la Culture Amadou Hampaté Bah',
-    organizer: "Agence Nationale Pour l'Emploi (ANPE) Mali",
-    imageUrl: 'https://picsum.photos/seed/emploimali/600/400',
-  },
-  {
-    id: 4,
-    title: 'Séminaire sur la rédaction de CV et lettres de motivation',
-    description: "Optimisez votre CV pour maximiser vos chances d'obtenir un entretien au Mali.",
-    date: '01 décembre 2025',
-    location: 'En ligne',
-    organizer: 'Relais RH Mali',
-    imageUrl: 'https://picsum.photos/seed/cvmali/600/400',
-  },
-];
+import { activityService } from '../services/activityService';
+import { Activite } from '../models/activity'; // Corrected import name
 
 const ActivitesPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+  const [activities, setActivities] = useState<Activite[]>([]); // Corrected type
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      setLoading(true);
+      try {
+        const data = await activityService.getAllActivities(token as string);
+        setActivities(data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des activités:", err);
+        setError("Impossible de charger les activités. Veuillez réessayer.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchActivities();
+  }, [token]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredActivities = activities.filter(activity =>
+    activity.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    activity.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    activity.lieu?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <CircularProgress />
+        <Typography variant="h6" sx={{ ml: 2 }}>Chargement des activités...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container sx={{ py: 8 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
 
   return (
     <Box>
@@ -95,6 +96,8 @@ const ActivitesPage: React.FC = () => {
             variant="outlined"
             size="small"
             sx={{ width: '40%' }}
+            value={searchTerm}
+            onChange={handleSearchChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -113,32 +116,40 @@ const ActivitesPage: React.FC = () => {
         </Box>
 
         <Grid container spacing={4}>
-          {dummyActivities.map((activity) => (
-            <Grid item xs={12} sm={6} md={4} key={activity.id}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out', '&:hover': { transform: 'translateY(-10px)', boxShadow: 6 } }}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={activity.imageUrl}
-                  alt={activity.title}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
-                    {activity.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                    {activity.date} - {activity.location}
-                  </Typography>
-                  <Typography variant="body1">
-                    {activity.description}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Voir les détails</Button>
-                </CardActions>
-              </Card>
+          {filteredActivities.length > 0 ? (
+            filteredActivities.map((activity) => (
+              <Grid item xs={12} sm={6} md={4} key={activity.id}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out', '&:hover': { transform: 'translateY(-10px)', boxShadow: 6 } }}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={activity.imageUrl || 'https://placehold.co/600x400'} // Fallback for image
+                    alt={activity.titre}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+                      {activity.titre}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      {activity.date_activite ? new Date(activity.date_activite).toLocaleDateString() : 'N/A'} - {activity.lieu}
+                    </Typography>
+                    <Typography variant="body1">
+                      {activity.description}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" onClick={() => console.log('Voir les détails de l\'activité:', activity.id)}>Voir les détails</Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="h6" color="textSecondary" sx={{ textAlign: 'center', mt: 4 }}>
+                Aucune activité trouvée.
+              </Typography>
             </Grid>
-          ))}
+          )}
         </Grid>
       </Container>
     </Box>
