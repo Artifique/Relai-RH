@@ -23,6 +23,7 @@ import BourseManagementPage from './pages/dashboard/BourseManagementPage';
 import OffreManagementPage from './pages/dashboard/OffreManagementPage'; // Import OffreManagementPage
 import ActiviteManagementPage from './pages/dashboard/ActiviteManagementPage'; // Import ActiviteManagementPage
 import CandidatureManagementPage from './pages/dashboard/CandidatureManagementPage'; // Import CandidatureManagementPage
+import RapportEtStatistiquePage from './pages/dashboard/RapportEtStatistiquePage'; // Import RapportEtStatistiquePage
 
 import theme from './theme';
 import { AuthProvider } from './context/AuthContext';
@@ -74,6 +75,7 @@ function App() {
                   <Route path="offres" element={<OffreManagementPage />} /> {/* Route for OffreManagementPage */}
                   <Route path="activities" element={<ActiviteManagementPage />} /> {/* Route for ActiviteManagementPage */}
                   <Route path="candidatures" element={<CandidatureManagementPage />} /> {/* Route for CandidatureManagementPage */}
+                  <Route path="reports" element={<RapportEtStatistiquePage />} /> {/* Route for RapportEtStatistiquePage */}
                   {/* Ajoutez ici d'autres routes de dashboard au besoin */}
                 </Route>
               </Route>

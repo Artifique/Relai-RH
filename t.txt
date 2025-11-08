@@ -1,65 +1,11 @@
 Compiled with problems:
 ×
-ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:92:19
-TS2304: Cannot find name 'offresEmploi'.
-    90 |
-    91 |   const filteredCandidatures = candidatures.filter(candidature => {
-  > 92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
-       |                   ^^^^^^^^^^^^
-    93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
-    94 |     const offreTitre = offre?.titre || '';
-    95 |     const userEmail = user?.email || '';
-ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:92:37
-TS7006: Parameter 'o' implicitly has an 'any' type.
-    90 |
-    91 |   const filteredCandidatures = candidatures.filter(candidature => {
-  > 92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
-       |                                     ^
-    93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
-    94 |     const offreTitre = offre?.titre || '';
-    95 |     const userEmail = user?.email || '';
-ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:92:63
-TS2339: Property 'offre_emploi_id' does not exist on type 'CandidatureBourse'.
-    90 |
-    91 |   const filteredCandidatures = candidatures.filter(candidature => {
-  > 92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
-       |                                                               ^^^^^^^^^^^^^^^
-    93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
-    94 |     const offreTitre = offre?.titre || '';
-    95 |     const userEmail = user?.email || '';
-ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:93:18
-TS2552: Cannot find name 'users'. Did you mean 'user'?
-    91 |   const filteredCandidatures = candidatures.filter(candidature => {
-    92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
-  > 93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
-       |                  ^^^^^
-    94 |     const offreTitre = offre?.titre || '';
-    95 |     const userEmail = user?.email || '';
-    96 |
-ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:93:29
-TS7006: Parameter 'u' implicitly has an 'any' type.
-    91 |   const filteredCandidatures = candidatures.filter(candidature => {
-    92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
-  > 93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
-       |                             ^
-    94 |     const offreTitre = offre?.titre || '';
-    95 |     const userEmail = user?.email || '';
-    96 |
-ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:93:55
-TS2551: Property 'utilisateur_id' does not exist on type 'CandidatureBourse'. Did you mean 'utilisateur'?
-    91 |   const filteredCandidatures = candidatures.filter(candidature => {
-    92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
-  > 93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
-       |                                                       ^^^^^^^^^^^^^^
-    94 |     const offreTitre = offre?.titre || '';
-    95 |     const userEmail = user?.email || '';
-    96 |
-ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:210:18
-TS2304: Cannot find name 'handleCloseSuccessDialog'.
-    208 |         title={successDialogTitle}
-    209 |         message={successDialogMessage}
-  > 210 |         onClose={handleCloseSuccessDialog}
-        |                  ^^^^^^^^^^^^^^^^^^^^^^^^
-    211 |       />
-    212 |     </Box>
-    213 |   );
+ERROR in src/pages/dashboard/RapportEtStatistiquePage.tsx:194:66
+TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+    192 |                       fill="#8884d8"
+    193 |                       dataKey="value"
+  > 194 |                       label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
+        |                                                                  ^^^^^^^^^^^^^^
+    195 |                     >
+    196 |                       {candidaturePieData.map((entry, index) => (
+    197 |                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
