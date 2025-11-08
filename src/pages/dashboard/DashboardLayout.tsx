@@ -14,6 +14,9 @@ const menuItems = [
   { text: 'Gestion Utilisateurs', icon: <People />, path: '/dashboard/users' },
   { text: 'Gestion Universités', icon: <School />, path: '/dashboard/universities' },
   { text: 'Gestion des Tests', icon: <Assignment />, path: '/dashboard/tests' },
+  { text: 'Gestion des Offres', icon: <Assignment />, path: '/dashboard/offres' },
+  { text: 'Gestion des Activités', icon: <Assignment />, path: '/dashboard/activities' },
+  { text: 'Gestion des Candidatures', icon: <Assignment />, path: '/dashboard/candidatures' },
   { text: 'Gestion des Bourses', icon: <MonetizationOn />, path: '/dashboard/bourses' },
   { text: 'Rapports & Stats', icon: <BarChart />, path: '/dashboard/reports' },
 ];

@@ -6,8 +6,8 @@ import { OffreEmploi } from '../models/offreEmploi';
 const BASE_URL = '/offres-emploi'; // Assurez-vous que c'est le bon endpoint API
 
 export const offreEmploiService = {
-  getAllOffresEmploi: async (): Promise<OffreEmploi[]> => {
-    const response = await callApi<OffreEmploi[]>(BASE_URL, 'GET');
+  getAllOffresEmploi: async (token?: string): Promise<OffreEmploi[]> => {
+    const response = await callApi<OffreEmploi[]>(BASE_URL, 'GET', undefined, token);
     return response;
   },
 
@@ -16,13 +16,13 @@ export const offreEmploiService = {
     return response;
   },
 
-  createOffreEmploi: async (offre: Omit<OffreEmploi, 'id' | 'cree_le'>, token: string): Promise<OffreEmploi> => {
-    const response = await callApi<OffreEmploi>(BASE_URL, 'POST', offre, token);
+  createOffreEmploi: async (formData: FormData, token: string): Promise<OffreEmploi> => {
+    const response = await callApi<OffreEmploi>(BASE_URL, 'POST', formData, token);
     return response;
   },
 
-  updateOffreEmploi: async (id: number, offre: Partial<OffreEmploi>, token: string): Promise<OffreEmploi> => {
-    const response = await callApi<OffreEmploi>(`${BASE_URL}/${id}`, 'PUT', offre, token);
+  updateOffreEmploi: async (id: number, formData: FormData, token: string): Promise<OffreEmploi> => {
+    const response = await callApi<OffreEmploi>(`${BASE_URL}/${id}`, 'PUT', formData, token);
     return response;
   },
 

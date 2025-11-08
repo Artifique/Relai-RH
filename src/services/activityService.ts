@@ -6,27 +6,27 @@ import { callApi } from './api';
 export const activityService = {
   // Get all activities
   getAllActivities: async (token?: string): Promise<Activite[]> => {
-    return callApi<Activite[]>('/activities', 'GET', undefined, token);
+    return callApi<Activite[]>('/activites', 'GET', undefined, token);
   },
 
   // Get activity by ID
   getActivityById: async (id: number, token?: string): Promise<Activite> => {
-    return callApi<Activite>(`/activities/${id}`, 'GET', undefined, token);
+    return callApi<Activite>(`/activites/${id}`, 'GET', undefined, token);
   },
 
-  // Create a new activity
-  createActivity: async (activityData: CreateActiviteDto, token?: string): Promise<Activite> => {
-    return callApi<Activite>('/activities', 'POST', activityData, token);
+  // Create a new activity with image
+  createActivityWithImage: async (activityData: FormData, token?: string): Promise<Activite> => {
+    return callApi<Activite>('/activites/with-image', 'POST', activityData, token);
   },
 
-  // Update an existing activity
-  updateActivity: async (id: number, activityData: UpdateActiviteDto, token?: string): Promise<Activite> => {
-    return callApi<Activite>(`/activities/${id}`, 'PUT', activityData, token);
+  // Update an existing activity with image
+  updateActivityWithImage: async (id: number, activityData: FormData, token?: string): Promise<Activite> => {
+    return callApi<Activite>(`/activites/with-image/${id}`, 'PUT', activityData, token);
   },
 
   // Delete an activity
   deleteActivity: async (id: number, token?: string): Promise<void> => {
-    return callApi<void>(`/activities/${id}`, 'DELETE', undefined, token);
+    return callApi<void>(`/activites/${id}`, 'DELETE', undefined, token);
   },
 
   // --- Job Offer Service Functions ---

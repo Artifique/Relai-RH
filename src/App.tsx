@@ -20,6 +20,9 @@ import UserManagementPage from './pages/dashboard/UserManagementPage';
 import UniversityManagementPage from './pages/dashboard/UniversityManagementPage';
 import TestManagementPage from './pages/dashboard/TestManagementPage';
 import BourseManagementPage from './pages/dashboard/BourseManagementPage';
+import OffreManagementPage from './pages/dashboard/OffreManagementPage'; // Import OffreManagementPage
+import ActiviteManagementPage from './pages/dashboard/ActiviteManagementPage'; // Import ActiviteManagementPage
+import CandidatureManagementPage from './pages/dashboard/CandidatureManagementPage'; // Import CandidatureManagementPage
 
 import theme from './theme';
 import { AuthProvider } from './context/AuthContext';
@@ -68,6 +71,9 @@ function App() {
                   <Route path="universities" element={<UniversityManagementPage />} />
                   <Route path="tests" element={<TestManagementPage />} />
                   <Route path="bourses" element={<BourseManagementPage />} />
+                  <Route path="offres" element={<OffreManagementPage />} /> {/* Route for OffreManagementPage */}
+                  <Route path="activities" element={<ActiviteManagementPage />} /> {/* Route for ActiviteManagementPage */}
+                  <Route path="candidatures" element={<CandidatureManagementPage />} /> {/* Route for CandidatureManagementPage */}
                   {/* Ajoutez ici d'autres routes de dashboard au besoin */}
                 </Route>
               </Route>

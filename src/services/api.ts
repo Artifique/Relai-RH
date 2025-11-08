@@ -36,3 +36,8 @@ export async function callApi<T>(
 
   return response.json();
 }
+
+export async function getStatsCounts(token: string): Promise<{ totalUsers: number; totalUniversities: number; totalScholarships: number }> {
+  const response = await callApi<{ totalUsers: number; totalUniversities: number; totalScholarships: number }>('/stats/counts', 'GET', undefined, token);
+  return response;
+}

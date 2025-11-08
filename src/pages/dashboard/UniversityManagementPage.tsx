@@ -41,6 +41,9 @@ const UniversityManagementPage: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Search state
+  const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     const fetchUniversities = async () => {
       if (!token) {
@@ -232,6 +235,17 @@ const UniversityManagementPage: React.FC = () => {
     }
   };
 
+  const filteredUniversities = universities.filter(uni =>
+    uni.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    uni.emailContact.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    uni.representant?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    uni.adresse?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const pagedUniversities = filteredUniversities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  // const pagedUniversities = filteredUniversities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
   return (
     <Box>
       <Box sx={{ mb: 4, p: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', textAlign: 'center', bgcolor: 'background.paper' }}>
@@ -248,6 +262,8 @@ const UniversityManagementPage: React.FC = () => {
                 variant="outlined" 
                 size="small" 
                 placeholder="Rechercher..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{ startAdornment: <InputAdornment position="start"><Search /></InputAdornment> }} 
               />
             </Grid>
@@ -267,8 +283,8 @@ const UniversityManagementPage: React.FC = () => {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? universities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  : universities
+                  ? pagedUniversities
+                  : filteredUniversities
                 ).map((uni) => (
                   <TableRow key={uni.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell>{uni.nom}</TableCell>
@@ -287,7 +303,7 @@ const UniversityManagementPage: React.FC = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={universities.length}
+            count={filteredUniversities.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(event, newPage) => setPage(newPage)}

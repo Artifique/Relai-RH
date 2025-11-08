@@ -1,3 +1,6 @@
+import { University } from './university'; // Assuming University interface is defined here
+import { FullUser } from './user'; // Assuming FullUser interface is defined here
+
 export enum TypeActivite {
   EVENEMENT = 'EVENEMENT',
   ATELIER = 'ATELIER',
@@ -20,8 +23,9 @@ export interface Activite {
   type_activite: TypeActivite;
   date_activite: string; // ISO date string
   lieu?: string;
-  universite_id: number;
-  publie_par_id: number;
+  imageUrl?: string; // Added imageUrl
+  universite: University; // Changed from universite_id to nested object
+  publiePar: FullUser; // Changed from publie_par_id to nested object
   cree_le: string; // ISO date string
 }
 
@@ -31,6 +35,7 @@ export interface CreateActiviteDto {
   type_activite: TypeActivite;
   date_activite: string;
   lieu?: string;
+  imageUrl?: string; // Added imageUrl
   universite_id: number;
   publie_par_id: number;
 }
@@ -41,6 +46,7 @@ export interface UpdateActiviteDto {
   type_activite?: TypeActivite;
   date_activite?: string;
   lieu?: string;
+  imageUrl?: string; // Added imageUrl
   universite_id?: number;
   publie_par_id?: number;
 }

@@ -1,5 +1,30 @@
-api.ts:28 
- POST http://localhost:8080/api/universites 500 (Internal Server Error)
-UniversityManagementPage.tsx:199 Error saving university: Error: Something went wrong
-    at callApi (api.ts:38:1)
-    at async handleFormSubmit (UniversityManagementPage.tsx:191:1)
+POST 
+
+body: {
+"titre": "Atelier de Développement Web",
+  "description": "Un atelier pratique sur les dernières technologies web.",
+  "typeActivite": "ATELIER",
+  "dateActivite": "2025-12-15T09:00:00",
+  "lieu": "Campus Universitaire","universite": { "id": 1 }
+}
+ image: a uploader
+
+
+ detail supplementaire:
+ 
+  Détails de l'endpoint `POST /api/activites` :
+
+   1. Endpoint : POST /api/activites
+   2. Autorisation : REPRESENTANT_UNIVERSITE ou ADMINISTRATEUR (token JWT requis dans l'en-tête Authorization).
+   3. Type de requête : multipart/form-data.
+   4. Parties de la requête :
+       * activite (obligatoire) : Objet Activite en chaîne JSON, avec Content-Type: application/json.
+       * image (facultatif) : Fichier image, avec son MIME type approprié.
+   5. Structure des données `Activite` (exemple JSON) : Inclut titre, description, dateDebut, dateFin (format ISO 8601), lieu,
+      typeActivite (valeur d'enum), et l'id de l'université associée.
+   6. Construction Frontend (JavaScript/React) : Utiliser FormData. Convertir l'objet activiteData en Blob avec type: 'application/json'
+       avant de l'ajouter à FormData. Ajouter le fichier image si présent. Envoyer la requête avec axios.post, en laissant axios gérer
+      le Content-Type multipart/form-data et en incluant le token JWT dans l'en-tête Authorization.
+   7. Conseils de débogage : Vérifier l'onglet Réseau du navigateur pour s'assurer que la requête est bien formée (méthode, URL,
+      en-têtes, payload) et consulter les logs backend en cas d'erreur 500.
+il y faut savoir que c est lid du current user qui est utiliser pour la partie publier par

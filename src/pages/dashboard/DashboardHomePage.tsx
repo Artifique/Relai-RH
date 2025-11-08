@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardContent, Typography, Box } from '@mui/material';
 import { People, School, Assignment, MonetizationOn } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { useAuth } from '../../context/AuthContext';
+import { getStatsCounts } from '../../services/api';
 
 // --- Données Factices pour les Graphiques ---
 
@@ -25,22 +27,42 @@ const roleData = [
 ];
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-// Données pour les cartes de statistiques
-const stats = [
-  { title: 'Utilisateurs Inscrits', value: '1,234', icon: <People fontSize="large" color="primary" /> },
-  { title: 'Universités Partenaires', value: '25', icon: <School fontSize="large" color="secondary" /> },
-  { title: 'Tests d\'Employabilité', value: '58', icon: <Assignment fontSize="large" color="success" /> },
-  { title: 'Candidatures aux Bourses', value: '345', icon: <MonetizationOn fontSize="large" color="warning" /> },
-];
-
 const DashboardHomePage: React.FC = () => {
+  const { token } = useAuth();
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalUniversities, setTotalUniversities] = useState(0);
+  const [totalScholarships, setTotalScholarships] = useState(0);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (token) {
+        try {
+          const stats = await getStatsCounts(token);
+          setTotalUsers(stats.totalUsers);
+          setTotalUniversities(stats.totalUniversities);
+          setTotalScholarships(stats.totalScholarships);
+        } catch (error) {
+          console.error("Error fetching stats:", error);
+        }
+      }
+    };
+    fetchStats();
+  }, [token]);
+
+  const statsCards = [
+    { title: 'Utilisateurs Inscrits', value: totalUsers.toLocaleString(), icon: <People fontSize="large" color="primary" /> },
+    { title: 'Universités Partenaires', value: totalUniversities.toLocaleString(), icon: <School fontSize="large" color="secondary" /> },
+    { title: 'Bourses Disponibles', value: totalScholarships.toLocaleString(), icon: <MonetizationOn fontSize="large" color="warning" /> },
+    { title: 'Tests d\'Employabilité', value: '58', icon: <Assignment fontSize="large" color="success" /> }, // This one is still hardcoded
+  ];
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
         Bienvenue sur votre tableau de bord
       </Typography>
       <Grid container spacing={4}>
-        {stats.map((stat, index) => (
+        {statsCards.map((stat, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card sx={{ display: 'flex', alignItems: 'center', p: 2, borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
               <Box sx={{ mr: 2 }}>{stat.icon}</Box>
