@@ -16,12 +16,12 @@ export const activityService = {
 
   // Create a new activity with image
   createActivityWithImage: async (activityData: FormData, token?: string): Promise<Activite> => {
-    return callApi<Activite>('/activites/with-image', 'POST', activityData, token);
+    return callApi<Activite>('/activites', 'POST', activityData, token);
   },
 
   // Update an existing activity with image
   updateActivityWithImage: async (id: number, activityData: FormData, token?: string): Promise<Activite> => {
-    return callApi<Activite>(`/activites/with-image/${id}`, 'PUT', activityData, token);
+    return callApi<Activite>(`/activites/${id}`, 'PUT', activityData, token);
   },
 
   // Delete an activity

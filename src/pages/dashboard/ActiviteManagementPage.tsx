@@ -23,7 +23,7 @@ const ActiviteManagementPage: React.FC = () => {
   const [viewOpen, setViewOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedActivite, setSelectedActivite] = useState<Activite | null>(null);
-  const { token } = useAuth();
+  const { token, user: authUser } = useAuth();
 
   // Form states
   const [titre, setTitre] = useState('');
@@ -32,12 +32,10 @@ const ActiviteManagementPage: React.FC = () => {
   const [dateActivite, setDateActivite] = useState('');
   const [lieu, setLieu] = useState('');
   const [universiteId, setUniversiteId] = useState<number | ''>('');
-  const [publieParId, setPublieParId] = useState<number | ''>('');
   const [imageFile, setImageFile] = useState<File | null>(null); // New state for image file
 
   // Dropdown data
   const [universities, setUniversities] = useState<University[]>([]);
-  const [users, setUsers] = useState<FullUser[]>([]);
 
   // Success Dialog states
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -61,12 +59,10 @@ const ActiviteManagementPage: React.FC = () => {
       try {
         const activitiesData = await activityService.getAllActivities(token as string);
         const universitiesData = await universityService.getAllUniversities(token as string);
-        const usersData = await userService.getAllUsers(token as string);
 
         console.log("Fetched activities data:", activitiesData);
         setActivities(activitiesData);
         setUniversities(universitiesData);
-        setUsers(usersData.filter(user => user.role === UserRole.ADMINISTRATEUR || user.role === UserRole.REPRESENTANT_UNIVERSITE)); // Filter users by relevant roles
       } catch (error) {
         console.error("Erreur lors de la récupération des données:", error);
       }
@@ -82,7 +78,6 @@ const ActiviteManagementPage: React.FC = () => {
       setDateActivite(selectedActivite.date_activite ? selectedActivite.date_activite.split('T')[0] : '');
       setLieu(selectedActivite.lieu || '');
       setUniversiteId(selectedActivite.universite.id);
-      setPublieParId(selectedActivite.publiePar.id);
       setImageFile(null); // Reset image file when editing
     } else {
       setTitre('');
@@ -91,7 +86,6 @@ const ActiviteManagementPage: React.FC = () => {
       setDateActivite('');
       setLieu('');
       setUniversiteId('');
-      setPublieParId('');
       setImageFile(null); // Reset image file when adding
     }
   }, [selectedActivite]);
@@ -131,7 +125,6 @@ const ActiviteManagementPage: React.FC = () => {
     setDateActivite('');
     setLieu('');
     setUniversiteId('');
-    setPublieParId('');
     setImageFile(null); // Reset image file on close
   };
 
@@ -164,14 +157,17 @@ const ActiviteManagementPage: React.FC = () => {
       return;
     }
 
+    const activityData = {
+      titre,
+      description,
+      typeActivite: typeActivite, // Changed to camelCase
+      dateActivite: `${dateActivite}T00:00:00`, // Ensure ISO 8601 format with time
+      lieu,
+      universite: { id: universiteId }, // Send universite as a nested object
+    };
+
     const formData = new FormData();
-    formData.append('titre', titre);
-    formData.append('description', description);
-    formData.append('type_activite', typeActivite as string);
-    formData.append('date_activite', dateActivite);
-    if (lieu) formData.append('lieu', lieu);
-    formData.append('universite_id', universiteId as string);
-    formData.append('publie_par_id', publieParId as string);
+    formData.append('activite', new Blob([JSON.stringify(activityData)], { type: 'application/json' }));
     if (imageFile) formData.append('image', imageFile);
 
     try {
@@ -210,10 +206,10 @@ const ActiviteManagementPage: React.FC = () => {
     };
   
     const filteredActivities = activities.filter(activite =>
-      activite.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      activite.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      activite.type_activite.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      activite.lieu?.toLowerCase().includes(searchTerm.toLowerCase())
+      (activite.titre ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (activite.description ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (activite.type_activite ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (activite.lieu ?? '').toLowerCase().includes(searchTerm.toLowerCase())
     );
   
     const pagedActivities = filteredActivities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -326,23 +322,6 @@ const ActiviteManagementPage: React.FC = () => {
                     <MenuItem value=""><em>Sélectionner une université</em></MenuItem>
                     {universities.map((uni) => (
                       <MenuItem key={uni.id} value={uni.id}>{uni.nom}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth margin="normal" required>
-                  <InputLabel id="publie-par-select-label">Publié par</InputLabel>
-                  <Select
-                    labelId="publie-par-select-label"
-                    id="publieParId"
-                    value={publieParId}
-                    label="Publié par"
-                    onChange={(e) => setPublieParId(e.target.value as number)}
-                  >
-                    <MenuItem value=""><em>Sélectionner un utilisateur</em></MenuItem>
-                    {users.map((user) => (
-                      <MenuItem key={user.id} value={user.id}>{user.email} ({user.role})</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
