@@ -1,3 +1,5 @@
+import { FullUser } from './user'; // Import FullUser
+
 export enum CandidatureStatut {
   EN_ATTENTE = 'EN_ATTENTE',
   ACCEPTEE = 'ACCEPTEE',
@@ -8,43 +10,43 @@ export interface BourseEmployabilite {
   id: number;
   titre: string;
   description: string;
-  criteres_eligibilite?: string;
-  date_limite_candidature?: string; // ISO date string
-  cree_par_id: number;
-  cree_le: string; // ISO date string
+  criteresEligibilite?: string; // Changed to camelCase
+  dateLimiteCandidature?: string; // Changed to camelCase
+  creePar: FullUser; // Changed from cree_par_id to nested object
+  creeLe: string | null; // Changed to camelCase and nullable
 }
 
 export interface CreateBourseEmployabiliteDto {
   titre: string;
   description: string;
-  criteres_eligibilite?: string;
-  date_limite_candidature?: string;
-  cree_par_id: number;
+  criteresEligibilite?: string; // Changed to camelCase
+  dateLimiteCandidature?: string; // Changed to camelCase
+  creePar: { id: number }; // Nested object for creation
 }
 
 export interface UpdateBourseEmployabiliteDto {
   titre?: string;
   description?: string;
-  criteres_eligibilite?: string;
-  date_limite_candidature?: string;
+  criteresEligibilite?: string; // Changed to camelCase
+  dateLimiteCandidature?: string; // Changed to camelCase
 }
 
 export interface CandidatureBourse {
   id: number;
-  bourse_id: number;
-  utilisateur_id: number;
-  date_candidature: string; // ISO date string
+  bourse: BourseEmployabilite; // Changed from bourse_id to nested object
+  utilisateur: FullUser; // Changed from utilisateur_id to nested object
+  dateCandidature: string | null; // Changed to camelCase and nullable
   statut: CandidatureStatut;
-  lettre_motivation?: string;
+  lettreMotivation?: string; // Changed to camelCase
 }
 
 export interface CreateCandidatureBourseDto {
-  bourse_id: number;
-  utilisateur_id: number;
-  lettre_motivation?: string;
+  bourseId: number; // Changed to camelCase
+  utilisateurId: number; // Changed to camelCase
+  lettreMotivation?: string; // Changed to camelCase
 }
 
 export interface UpdateCandidatureBourseDto {
   statut?: CandidatureStatut;
-  lettre_motivation?: string;
+  lettreMotivation?: string; // Changed to camelCase
 }

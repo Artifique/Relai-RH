@@ -1,9 +1,9 @@
 // src/services/offreEmploiService.ts
 
 import { callApi } from './api';
-import { OffreEmploi } from '../models/offreEmploi';
+import { OffreEmploi } from '../models/activity'; // Updated import path
 
-const BASE_URL = '/offres-emploi'; // Assurez-vous que c'est le bon endpoint API
+const BASE_URL = '/offres'; // Assurez-vous que c'est le bon endpoint API
 
 export const offreEmploiService = {
   getAllOffresEmploi: async (token?: string): Promise<OffreEmploi[]> => {
@@ -16,12 +16,12 @@ export const offreEmploiService = {
     return response;
   },
 
-  createOffreEmploi: async (formData: FormData, token: string): Promise<OffreEmploi> => {
+  createOffreEmploiWithImage: async (formData: FormData, token: string): Promise<OffreEmploi> => {
     const response = await callApi<OffreEmploi>(BASE_URL, 'POST', formData, token);
     return response;
   },
 
-  updateOffreEmploi: async (id: number, formData: FormData, token: string): Promise<OffreEmploi> => {
+  updateOffreEmploiWithImage: async (id: number, formData: FormData, token: string): Promise<OffreEmploi> => {
     const response = await callApi<OffreEmploi>(`${BASE_URL}/${id}`, 'PUT', formData, token);
     return response;
   },

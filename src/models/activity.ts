@@ -57,10 +57,11 @@ export interface OffreEmploi {
   description: string;
   entreprise?: string;
   lieu?: string;
-  type_contrat?: TypeContrat;
-  date_limite_candidature?: string; // ISO date string
-  publie_par_id?: number;
-  cree_le: string; // ISO date string
+  typeContrat?: TypeContrat; // Changed from type_contrat to camelCase
+  dateLimiteCandidature?: string; // Changed from date_limite_candidature to camelCase
+  imageUrl?: string;
+  publiePar?: FullUser;
+  creeLe: string; // Changed from cree_le to camelCase
   lien?: string;
 }
 
@@ -69,8 +70,9 @@ export interface CreateOffreEmploiDto {
   description: string;
   entreprise?: string;
   lieu?: string;
-  type_contrat?: TypeContrat;
-  date_limite_candidature?: string;
+  typeContrat?: TypeContrat; // Changed from type_contrat to camelCase
+  dateLimiteCandidature?: string; // Changed from date_limite_candidature to camelCase
+  imageUrl?: string;
   publie_par_id?: number;
   lien?: string;
 }
@@ -80,8 +82,9 @@ export interface UpdateOffreEmploiDto {
   description?: string;
   entreprise?: string;
   lieu?: string;
-  type_contrat?: TypeContrat;
-  date_limite_candidature?: string;
+  typeContrat?: TypeContrat; // Changed from type_contrat to camelCase
+  dateLimiteCandidature?: string; // Changed from date_limite_candidature to camelCase
+  imageUrl?: string;
   publie_par_id?: number;
   lien?: string;
 }

@@ -1,28 +1,18 @@
 // src/services/candidatureService.ts
 
 import { callApi } from './api';
-import { Candidature } from '../models/candidature';
+import { CandidatureBourse } from '../models/bourse'; // Updated import
 
 const BASE_URL = '/candidatures'; // Assurez-vous que c'est le bon endpoint API
 
 export const candidatureService = {
-  getAllCandidatures: async (token?: string): Promise<Candidature[]> => {
-    const response = await callApi<Candidature[]>(BASE_URL, 'GET', undefined, token);
+  getAllCandidatures: async (token?: string): Promise<CandidatureBourse[]> => {
+    const response = await callApi<CandidatureBourse[]>(BASE_URL, 'GET', undefined, token);
     return response;
   },
 
-  getCandidatureById: async (id: number, token?: string): Promise<Candidature> => {
-    const response = await callApi<Candidature>(`${BASE_URL}/${id}`, 'GET', undefined, token);
-    return response;
-  },
-
-  createCandidature: async (formData: FormData, token: string): Promise<Candidature> => {
-    const response = await callApi<Candidature>(BASE_URL, 'POST', formData, token);
-    return response;
-  },
-
-  updateCandidature: async (id: number, formData: FormData, token: string): Promise<Candidature> => {
-    const response = await callApi<Candidature>(`${BASE_URL}/${id}`, 'PUT', formData, token);
+  getCandidatureById: async (id: number, token?: string): Promise<CandidatureBourse> => {
+    const response = await callApi<CandidatureBourse>(`${BASE_URL}/${id}`, 'GET', undefined, token);
     return response;
   },
 

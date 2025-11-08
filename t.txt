@@ -1,13 +1,65 @@
-ERROR
-Cannot read properties of undefined (reading 'toLowerCase')
-TypeError: Cannot read properties of undefined (reading 'toLowerCase')
-    at http://localhost:3000/Relai-RH/main.b65186dd19e0b136e0b9.hot-update.js:255:175
-    at Array.filter (<anonymous>)
-    at ActiviteManagementPage (http://localhost:3000/Relai-RH/main.b65186dd19e0b136e0b9.hot-update.js:253:41)
-    at Object.react_stack_bottom_frame (http://localhost:3000/Relai-RH/static/js/bundle.js:74093:18)
-    at renderWithHooks (http://localhost:3000/Relai-RH/static/js/bundle.js:64966:20)
-    at updateFunctionComponent (http://localhost:3000/Relai-RH/static/js/bundle.js:66355:17)
-    at beginWork (http://localhost:3000/Relai-RH/static/js/bundle.js:66924:16)
-    at runWithFiberInDEV (http://localhost:3000/Relai-RH/static/js/bundle.js:61442:68)
-    at performUnitOfWork (http://localhost:3000/Relai-RH/static/js/bundle.js:69351:93)
-    at workLoopSync (http://localhost:3000/Relai-RH/static/js/bundle.js:69246:38)
+Compiled with problems:
+×
+ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:92:19
+TS2304: Cannot find name 'offresEmploi'.
+    90 |
+    91 |   const filteredCandidatures = candidatures.filter(candidature => {
+  > 92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
+       |                   ^^^^^^^^^^^^
+    93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
+    94 |     const offreTitre = offre?.titre || '';
+    95 |     const userEmail = user?.email || '';
+ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:92:37
+TS7006: Parameter 'o' implicitly has an 'any' type.
+    90 |
+    91 |   const filteredCandidatures = candidatures.filter(candidature => {
+  > 92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
+       |                                     ^
+    93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
+    94 |     const offreTitre = offre?.titre || '';
+    95 |     const userEmail = user?.email || '';
+ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:92:63
+TS2339: Property 'offre_emploi_id' does not exist on type 'CandidatureBourse'.
+    90 |
+    91 |   const filteredCandidatures = candidatures.filter(candidature => {
+  > 92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
+       |                                                               ^^^^^^^^^^^^^^^
+    93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
+    94 |     const offreTitre = offre?.titre || '';
+    95 |     const userEmail = user?.email || '';
+ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:93:18
+TS2552: Cannot find name 'users'. Did you mean 'user'?
+    91 |   const filteredCandidatures = candidatures.filter(candidature => {
+    92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
+  > 93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
+       |                  ^^^^^
+    94 |     const offreTitre = offre?.titre || '';
+    95 |     const userEmail = user?.email || '';
+    96 |
+ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:93:29
+TS7006: Parameter 'u' implicitly has an 'any' type.
+    91 |   const filteredCandidatures = candidatures.filter(candidature => {
+    92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
+  > 93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
+       |                             ^
+    94 |     const offreTitre = offre?.titre || '';
+    95 |     const userEmail = user?.email || '';
+    96 |
+ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:93:55
+TS2551: Property 'utilisateur_id' does not exist on type 'CandidatureBourse'. Did you mean 'utilisateur'?
+    91 |   const filteredCandidatures = candidatures.filter(candidature => {
+    92 |     const offre = offresEmploi.find(o => o.id === candidature.offre_emploi_id);
+  > 93 |     const user = users.find(u => u.id === candidature.utilisateur_id);
+       |                                                       ^^^^^^^^^^^^^^
+    94 |     const offreTitre = offre?.titre || '';
+    95 |     const userEmail = user?.email || '';
+    96 |
+ERROR in src/pages/dashboard/CandidatureManagementPage.tsx:210:18
+TS2304: Cannot find name 'handleCloseSuccessDialog'.
+    208 |         title={successDialogTitle}
+    209 |         message={successDialogMessage}
+  > 210 |         onClose={handleCloseSuccessDialog}
+        |                  ^^^^^^^^^^^^^^^^^^^^^^^^
+    211 |       />
+    212 |     </Box>
+    213 |   );

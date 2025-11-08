@@ -68,6 +68,7 @@ const UserManagementPage: React.FC = () => {
   const [createdUserId, setCreatedUserId] = useState<number | null>(null); // ID de l'utilisateur après signup
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -77,6 +78,15 @@ const UserManagementPage: React.FC = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const filteredUsers = users.filter(user =>
+    (user.nom?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
+    (user.prenom?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const pagedUsers = filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const fetchUsers = async () => {
     if (!token) return; // Ne pas charger si pas de token
@@ -342,6 +352,8 @@ const UserManagementPage: React.FC = () => {
                 variant="outlined" 
                 size="small" 
                 placeholder="Rechercher..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{ startAdornment: <InputAdornment position="start"><Search /></InputAdornment> }} 
               />
             </Grid>
@@ -361,7 +373,10 @@ const UserManagementPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user) => (
+                {(rowsPerPage > 0
+                  ? pagedUsers
+                  : filteredUsers
+                ).map((user) => (
                   <TableRow key={user.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell>{user.nom}</TableCell>
                     <TableCell>{user.email}</TableCell>
@@ -380,7 +395,7 @@ const UserManagementPage: React.FC = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={users.length}
+            count={filteredUsers.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
