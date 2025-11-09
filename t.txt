@@ -1,15 +1,7 @@
-L'utilisateur souhaite afficher les activités avec leurs images sur le frontend. Je vais expliquer comment récupérer les activités et
-   construire les URL d'images.
-
-  1. Récupérer les activités du backend :
-   * Effectuer une requête GET vers http://localhost:8080/api/activites.
-   * Chaque objet Activite retourné contiendra un champ imageUrl (le nom du fichier).
-
-  2. Construire l'URL de l'image sur le frontend :
-   * L'URL complète sera http://localhost:8080/uploads/ + [nomDuFichierImage].
-
-  3. Exemple de code Frontend (React) :
-  Un composant ActivitesList qui utilise useEffect pour faire un axios.get vers /api/activites. Il mappe ensuite les activités, et
-  pour chaque activite.imageUrl non nul, il rend une balise <img> avec la source construite
-  (http://localhost:8080/uploads/${activite.imageUrl}).
-
+POST http://localhost:8080/api/auth/signup
+body:
+ {
+                "email": "sali@gmail.com",
+                "password": "sali123",
+               "role": "ETUDIANT"
+ }

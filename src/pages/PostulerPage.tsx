@@ -1,134 +1,63 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Typography, Box, Paper, Grid, Button, Chip, Avatar } from '@mui/material';
-
-interface JobDetail {
-  id: number;
-  title: string;
-  company: string;
-  location: string;
-  logoUrl: string;
-  contractType: string;
-  description: string;
-  responsibilities: string[];
-  qualifications: string[];
-}
-
-const jobDetailsData: { [key: string]: JobDetail } = {
-  "1": {
-    id: 1,
-    title: 'Développeur Frontend',
-    company: 'Orange Mali',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/orangemali/200',
-    contractType: 'CDI',
-    description: 'Nous recherchons un développeur Frontend passionné pour rejoindre notre équipe chez Orange Mali et travailler sur des projets innovants.',
-    responsibilities: [
-      'Développer de nouvelles fonctionnalités pour nos applications web.',
-      'Collaborer avec les équipes de design et de backend.',
-      'Maintenir et améliorer la base de code existante.',
-    ],
-    qualifications: [
-      'Maîtrise de React, HTML, CSS.',
-      'Expérience avec TypeScript.',
-      'Bonne connaissance des API REST.',
-      'Résider au Mali.',
-    ],
-  },
-  "2": {
-    id: 2,
-    title: 'Chef de Projet Digital',
-    company: 'Malitel',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/malitel/200',
-    contractType: 'CDD',
-    description: 'Malitel recherche un Chef de Projet Digital dynamique pour piloter des initiatives innovantes.',
-    responsibilities: [
-      'Gérer le cycle de vie complet des projets digitaux.',
-      'Coordonner les équipes techniques et marketing.',
-      'Assurer le suivi budgétaire et la planification.',
-    ],
-    qualifications: [
-      'Expérience en gestion de projet digital.',
-      'Connaissance des méthodologies Agile.',
-      'Excellentes compétences en communication.',
-      'Résider au Mali.',
-    ],
-  },
-  "3": {
-    id: 3,
-    title: 'Data Analyst',
-    company: 'Banque de Développement du Mali (BDM)',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/bdm/200',
-    contractType: 'Stage',
-    description: 'La BDM recherche un Data Analyst stagiaire pour analyser des données financières et aider à la prise de décision.',
-    responsibilities: [
-      'Collecter et analyser des données financières.',
-      'Créer des rapports et des tableaux de bord.',
-      'Identifier des tendances et des opportunités.',
-    ],
-    qualifications: [
-      'Étudiant en statistiques, mathématiques ou informatique.',
-      'Maîtrise d\'Excel et SQL.',
-      'Connaissance de Python ou R est un plus.',
-      'Résider au Mali.',
-    ],
-  },
-  "4": {
-    id: 4,
-    title: 'UI/UX Designer',
-    company: 'Jumia Mali',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/jumiamali/200',
-    contractType: 'CDI',
-    description: 'Jumia Mali recherche un UI/UX Designer créatif pour améliorer l\'expérience utilisateur de notre plateforme e-commerce.',
-    responsibilities: [
-      'Concevoir des interfaces utilisateur intuitives et attrayantes.',
-      'Réaliser des wireframes, prototypes et maquettes.',
-      'Effectuer des tests utilisateurs.',
-    ],
-    qualifications: [
-      'Maîtrise des outils de design (Figma, Sketch, Adobe XD).',
-      'Expérience en conception d\'interfaces mobiles et web.',
-      'Portfolio solide.',
-      'Résider au Mali.',
-    ],
-  },
-  "5": {
-    id: 5,
-    title: 'Développeur Backend',
-    company: 'Société Malienne de Transports (SMT)',
-    location: 'Bamako, Mali',
-    logoUrl: 'https://picsum.photos/seed/smt/200',
-    contractType: 'CDI',
-    description: 'La SMT recherche un Développeur Backend expérimenté pour renforcer son équipe technique.',
-    responsibilities: [
-      'Concevoir et développer des API robustes.',
-      'Assurer la maintenance et l\'optimisation des bases de données.',
-      'Collaborer avec les équipes frontend.',
-    ],
-    qualifications: [
-      'Maîtrise de Node.js, Python ou Java.',
-      'Expérience avec les bases de données SQL et NoSQL.',
-      'Connaissance des services cloud (AWS, Azure).',
-      'Résider au Mali.',
-    ],
-  },
-};
+import { Container, Typography, Box, Paper, Grid, Button, Chip, Avatar, CircularProgress, Alert } from '@mui/material';
+import { offreEmploiService } from '../services/offreEmploiService';
+import { OffreEmploi } from '../models/activity'; // Assuming OffreEmploi is defined here
+import { useAuth } from '../context/AuthContext';
 
 const PostulerPage: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
-  const job = jobId ? jobDetailsData[jobId] : undefined;
+  const { token } = useAuth();
+  const [jobOffer, setJobOffer] = useState<OffreEmploi | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!job) {
+  useEffect(() => {
+    const fetchJobOffer = async () => {
+      if (!jobId) {
+        setError("ID de l'offre d'emploi manquant.");
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      try {
+        const data = await offreEmploiService.getOffreEmploiById(Number(jobId));
+        setJobOffer(data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération de l'offre d'emploi:", err);
+        setError("Impossible de charger l'offre d'emploi. Veuillez réessayer.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobOffer();
+  }, [jobId, token]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <CircularProgress />
+        <Typography variant="h6" sx={{ ml: 2 }}>Chargement de l'offre d'emploi...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container sx={{ py: 8 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
+
+  if (!jobOffer) {
     return (
       <Container sx={{ mt: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Annonce non trouvée
+          Offre d'emploi non trouvée
         </Typography>
         <Typography variant="body1">
-          L'annonce que vous recherchez n'existe pas.
+          L'offre d'emploi que vous recherchez n'existe pas.
         </Typography>
       </Container>
     );
@@ -139,16 +68,16 @@ const PostulerPage: React.FC = () => {
       <Paper elevation={3} sx={{ p: 4 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
-            <Chip label={job.contractType} color="primary" size="small" sx={{ mb: 1 }} />
+            <Chip label={jobOffer.typeContrat || 'N/A'} color="primary" size="small" sx={{ mb: 1 }} />
             <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-              {job.title}
+              {jobOffer.titre}
             </Typography>
             <Typography variant="h6" color="text.secondary">
-              {job.company} - {job.location}
+              {jobOffer.entreprise || 'N/A'} - {jobOffer.lieu || 'N/A'}
             </Typography>
           </Grid>
           <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Avatar src={job.logoUrl} alt={`${job.company} logo`} sx={{ width: 80, height: 80 }} />
+            <Avatar src={jobOffer.imageUrl ? `http://localhost:8080/uploads/${jobOffer.imageUrl}` : 'https://placehold.co/80x80'} alt={`${jobOffer.entreprise} logo`} sx={{ width: 80, height: 80 }} />
           </Grid>
         </Grid>
 
@@ -157,31 +86,12 @@ const PostulerPage: React.FC = () => {
             Description du poste
           </Typography>
           <Typography variant="body1" paragraph>
-            {job.description}
+            {jobOffer.description}
           </Typography>
         </Box>
 
-        <Box sx={{ my: 4 }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
-            Responsabilités
-          </Typography>
-          <ul>
-            {job.responsibilities.map((resp, index) => (
-              <li key={index}><Typography variant="body1">{resp}</Typography></li>
-            ))}
-          </ul>
-        </Box>
-
-        <Box sx={{ my: 4 }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
-            Qualifications requises
-          </Typography>
-          <ul>
-            {job.qualifications.map((qual, index) => (
-              <li key={index}><Typography variant="body1">{qual}</Typography></li>
-            ))}
-          </ul>
-        </Box>
+        {/* Responsibilities and Qualifications are not directly available in OffreEmploi model */}
+        {/* If needed, these would have to be added to the OffreEmploi model */}
 
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Button variant="contained" color="primary" size="large">

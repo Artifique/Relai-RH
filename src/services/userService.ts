@@ -43,4 +43,9 @@ export const userService = {
   createProfilMembre: async (profileData: Omit<UserProfile, 'utilisateurId'> & { utilisateurId: number }, token: string): Promise<UserProfile> => {
     return callApi<UserProfile>('/profils/admin', 'POST', profileData, token);
   },
+
+  // Create a user profile for a newly registered user (public endpoint)
+  createProfile: async (profileData: UserProfile): Promise<UserProfile> => {
+    return callApi<UserProfile>('/profils', 'POST', profileData);
+  },
 };
